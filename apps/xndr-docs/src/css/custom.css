@@ -12,7 +12,11 @@ html {
   scroll-behavior: smooth;
 }
 
-* {
+/* Apply transition timing only to specific elements, not globally to avoid interfering with Docusaurus animations */
+.theme-doc-markdown *,
+.footer *,
+.button--primary,
+.button--secondary {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -175,6 +179,49 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--xndr-primary-text);
 }
 
+/* Hide Docusaurus default mobile menu */
+@media (max-width: 996px) {
+  .navbar-sidebar {
+    display: none !important;
+  }
+  
+  .navbar-sidebar__backdrop {
+    display: none !important;
+  }
+  
+  /* Hide default navbar toggle button */
+  .navbar__toggle {
+    display: none !important;
+  }
+  
+  /* Ensure navbar items are hidden on mobile */
+  .navbar__items--right {
+    display: none;
+  }
+  
+  /* Position mobile menu button in navbar */
+  .navbar__inner {
+    position: relative;
+  }
+  
+  /* Ensure mobile menu button is visible and positioned */
+  .navbar__items {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Ensure navbar inner uses flexbox */
+  .navbar__inner {
+    display: flex !important;
+    align-items: center;
+  }
+  
+  /* Make logo clickable on mobile to open menu */
+  .navbar__brand {
+    cursor: pointer;
+  }
+}
+
 /* Footer Styles - Brutal minimalism */
 .footer {
   background: #360b18;
@@ -313,20 +360,21 @@ a.button--secondary:hover {
 }
 
 /* Links - Clean and subtle - Neutral by default, dark red only when active */
-a {
+/* Only apply to specific areas, NOT globally to avoid interfering with navbar-sidebar (mobile menu) */
+.theme-doc-markdown a {
   color: inherit;
   transition: color 0.2s ease;
   text-decoration: none;
 }
 
-a:hover {
+.theme-doc-markdown a:hover {
   color: var(--xndr-primary-text);
   text-decoration: underline;
 }
 
 /* Active links should be dark red */
-a[class*="active"],
-.menu__link--active {
+/* Only apply to sidebar menu, NOT navbar-sidebar (mobile menu) */
+.theme-doc-sidebar-container .menu__link--active {
   color: var(--xndr-primary-text) !important;
 }
 
@@ -495,10 +543,10 @@ code:hover {
 }
 
 /* Active sidebar item - Clean minimalism */
+/* Only apply to theme-doc-sidebar-container, NOT navbar-sidebar (mobile menu) */
 .theme-doc-sidebar-item-link--active,
 .theme-doc-sidebar-container .theme-doc-sidebar-item-link--active,
-.theme-doc-sidebar-container .menu__list-item .theme-doc-sidebar-item-link--active,
-.menu__list-item .theme-doc-sidebar-item-link--active {
+.theme-doc-sidebar-container .menu__list-item .theme-doc-sidebar-item-link--active {
   background: transparent !important;
   color: var(--xndr-primary-text) !important;
   font-weight: 600 !important;
@@ -511,8 +559,7 @@ code:hover {
 
 .theme-doc-sidebar-item-link--active::before,
 .theme-doc-sidebar-container .theme-doc-sidebar-item-link--active::before,
-.theme-doc-sidebar-container .menu__list-item .theme-doc-sidebar-item-link--active::before,
-.menu__list-item .theme-doc-sidebar-item-link--active::before {
+.theme-doc-sidebar-container .menu__list-item .theme-doc-sidebar-item-link--active::before {
   content: '' !important;
   position: absolute !important;
   left: 0 !important;

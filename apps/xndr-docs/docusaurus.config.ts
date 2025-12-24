@@ -22,7 +22,7 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'fabfog', // Usually your GitHub org/user name.
+  organizationName: 'xndrjs', // Usually your GitHub org/user name.
   projectName: 'xndrjs', // Usually your repo name.
 
   onBrokenLinks: 'throw',
@@ -98,7 +98,7 @@ const config: Config = {
           label: 'docs',
         },
         {
-          href: 'https://github.com/fabfog/xndrjs',
+          href: 'https://github.com/xndrjs/xndrjs',
           label: 'GitHub',
           position: 'right',
         },

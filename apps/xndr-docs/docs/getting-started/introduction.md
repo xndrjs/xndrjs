@@ -2,7 +2,7 @@
 
 `xndr` is a collection of libraries that let you write framework-agnostic state management. This means you will be able to write your business logics once, and share it between different frameworks (React, Solid, Svelte - more incoming) or between client-side and server-side (i.e. in Next.js).
 
-## Why `xndr`?
+## Why xndr?
 
 The name `xndr` (pronounced "xander") comes from **Alexander** the Great, who famously cut the Gordian knot: a symbol of cutting through complexity with a radical solution.
 
