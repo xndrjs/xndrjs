@@ -25,7 +25,7 @@ export default function Home(): ReactNode {
           </div>
           <div className={styles.featuresGrid}>
             <FeatureCard
-              title="Framework-Agnostic"
+              title="Framework Agnostic"
               description="Write your business logic once and reuse it across React, Solid, Svelte, and any framework"
             />
             <FeatureCard

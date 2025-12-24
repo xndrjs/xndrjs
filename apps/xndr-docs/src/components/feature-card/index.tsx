@@ -2,12 +2,12 @@ import type {ReactNode} from 'react';
 import styles from '../../pages/index.module.css';
 
 type FeatureCardProps = {
-  icon: string;
+  icon?: string;
   title: string;
   description: string;
 };
 
-export default function FeatureCard({icon, title, description}: FeatureCardProps): ReactNode {
+export default function FeatureCard({ icon, title, description }: FeatureCardProps): ReactNode {
   return (
     <div className={styles.featureCard}>
       <div className={styles.featureIcon}>{icon}</div>

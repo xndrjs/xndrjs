@@ -134,15 +134,12 @@
   padding: 2rem;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .featureCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
   border-color: #6B1F2E;
-  background: #2a2a2a;
 }
 
 .featureIcon {

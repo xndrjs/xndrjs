@@ -648,6 +648,43 @@ code:hover {
   border-color: var(--xndr-cyan);
 }
 
+/* Breadcrumb styling */
+.breadcrumbs {
+  font-size: 1rem;
+}
+
+.breadcrumbs__item {
+  font-size: 1rem;
+}
+
+.breadcrumbs__link {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.2s ease;
+}
+
+.breadcrumbs__item--active {
+  background: transparent !important;
+}
+
+.breadcrumbs__item--active .breadcrumbs__link {
+  color: var(--xndr-primary-text);
+  background: transparent;
+  font-size: 1rem;
+}
+
+[data-theme='light'] .breadcrumbs__link {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme='light'] .breadcrumbs__link:hover {
+  color: var(--xndr-primary-text);
+}
+
+[data-theme='light'] .breadcrumbs__item--active .breadcrumbs__link {
+  color: var(--xndr-primary-text);
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 10px;
@@ -659,13 +696,13 @@ code:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 217, 255, 0.3);
+  background: rgba(107, 31, 46, 0.5);
   border-radius: 5px;
   border: 2px solid var(--xndr-bg-primary);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 217, 255, 0.5);
+  background: rgba(107, 31, 46, 0.8);
 }
 
 /* Selection styling */
