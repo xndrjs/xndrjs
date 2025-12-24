@@ -14,6 +14,11 @@
   "engines": {
     "node": ">=18"
   },
+  "pnpm": {
+    "overrides": {
+      "@testing-library/react>react-dom": "19.2.3"
+    }
+  },
   "scripts": {
     "generate:workspace-config": "tsx scripts/generate-workspace-config.ts",
     "dev": "pnpm generate:workspace-config && turbo run dev --filter './apps/*'",
