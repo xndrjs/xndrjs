@@ -10,7 +10,7 @@ Just as Alexander cut through the knot, `xndr` helps you make a clean cut betwee
 
 ## Core Philosophy
 
-`xndr` allows you to:
+`xndr`'s mission is to let you
 
 - Write business logic **once** using framework-agnostic patterns
 - Reuse the same code with React, Solid, Svelte (support for more frameworks incoming)
