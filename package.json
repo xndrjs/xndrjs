@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "author": "Fabio Fognani",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xndrjs/xndrjs.git"
+  },
+  "homepage": "",
   "packageManager": "pnpm@9.12.0",
   "engines": {
     "node": ">=18"
