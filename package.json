@@ -1,0 +1,23 @@
+{
+  "name": "xndrjs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.12.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "generate:workspace-config": "tsx scripts/generate-workspace-config.ts",
+    "dev": "pnpm generate:workspace-config && turbo run dev --filter './apps/*'",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "build": "pnpm generate:workspace-config && turbo run build",
+    "prepublish": "turbo run prepublish"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "turbo": "^2.7.1",
+    "typescript": "^5.6.3"
+  }
+}

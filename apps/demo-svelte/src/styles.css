@@ -1,0 +1,311 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f5f5f5;
+  color: #333;
+}
+
+#app {
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.app-header p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.demo-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.demo-section h2 {
+  margin-bottom: 1rem;
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+.todo-input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.todo-input-group input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.todo-input-group input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.todo-input-group button {
+  padding: 0.75rem 1.5rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.todo-input-group button:hover {
+  background: #2980b9;
+}
+
+.todo-input-group button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.todo-item.completed span {
+  text-decoration: line-through;
+  color: #7f8c8d;
+}
+
+.todo-item input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.todo-item button {
+  margin-left: auto;
+  padding: 0.5rem 1rem;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.todo-item button:hover {
+  background: #c0392b;
+}
+
+.todo-list {
+  min-height: 200px;
+}
+
+.todo-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.todo-actions button {
+  flex: 1;
+  padding: 0.75rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.todo-actions button:hover {
+  background: #2980b9;
+}
+
+.todo-actions button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.counter-display {
+  font-size: 3rem;
+  text-align: center;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.fsm-state {
+  text-align: center;
+  color: #7f8c8d;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.counter-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.counter-actions button {
+  flex: 1;
+  padding: 0.75rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.counter-actions button:hover {
+  background: #2980b9;
+}
+
+.counter-actions button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.counter-actions .play-button {
+  background: #27ae60;
+}
+
+.counter-actions .play-button:hover {
+  background: #229954;
+}
+
+.counter-actions .pause-button {
+  background: #f39c12;
+}
+
+.counter-actions .pause-button:hover {
+  background: #e67e22;
+}
+
+.counter-actions .stop-button {
+  background: #e74c3c;
+}
+
+.counter-actions .stop-button:hover {
+  background: #c0392b;
+}
+
+.counter-actions .stop-button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.event-log {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.event-item {
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: #f8f9fa;
+}
+
+.event-item-header {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.event-item-time {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+}
+
+.event-item-payload {
+  font-family: monospace;
+  font-size: 0.85rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 2px;
+  overflow-x: auto;
+}
+
+.event-item.created {
+  border-left: 4px solid #27ae60;
+}
+
+.event-item.updated {
+  border-left: 4px solid #3498db;
+}
+
+.event-item.deleted {
+  border-left: 4px solid #e74c3c;
+}
+
+.event-log-actions {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.event-log-actions button {
+  padding: 0.75rem 1.5rem;
+  background: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.event-log-actions button:hover {
+  background: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+  .demo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "format": {
+      "cache": true,
+      "outputs": [],
+      "inputs": [
+        "src/**",
+        "*.ts",
+        "*.tsx",
+        "*.js",
+        "*.json",
+        ".prettierrc.json"
+      ]
+    },
+    "lint": {
+      "cache": true,
+      "dependsOn": ["format"],
+      "outputs": [],
+      "inputs": [
+        "src/**",
+        "package.json",
+        "tsconfig.json",
+        "packages/config-typescript/base.json"
+      ]
+    },
+    "test": {
+      "cache": true,
+      "dependsOn": ["^lint"],
+      "outputs": []
+    },
+    "build": {
+      "cache": true,
+      "dependsOn": ["^build", "lint"],
+      "outputs": ["dist/**"]
+    },
+    "prepublish": {
+      "cache": true,
+      "dependsOn": ["format", "lint", "test", "build"],
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "outputs": [],
+      "persistent": true
+    }
+  }
+}
+

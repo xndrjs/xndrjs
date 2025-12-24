@@ -1,0 +1,12 @@
+{
+  "name": "@xndrjs/config-typescript",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    "base.json"
+  ],
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}

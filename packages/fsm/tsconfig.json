@@ -1,0 +1,11 @@
+{
+  "extends": "../config-typescript/base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "lib": ["ES2023", "DOM", "ESNext"],
+    "types": ["node", "vitest/globals"],
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": ["dist", "node_modules"]
+}

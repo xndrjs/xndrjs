@@ -1,0 +1,18 @@
+{
+  "extends": "../../packages/config-typescript/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@xndrjs/demo-common": ["../../packages/demo-common/src"],
+      "@xndrjs/core": ["../../packages/core/src"],
+      "@xndrjs/adapter-svelte": ["../../packages/adapter-svelte/src"]
+    },
+    "lib": ["ES2023", "DOM", "ESNext.Disposable"],
+    "types": ["svelte", "vite/client"],
+    "noEmit": true
+  },
+  "include": ["src"],
+  "exclude": ["dist", "node_modules"]
+}
+

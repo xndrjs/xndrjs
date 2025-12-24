@@ -1,0 +1,28 @@
+{
+  "name": "@xndrjs/config-eslint",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,json}\"",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@eslint/js": "^9.36.0",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "typescript-eslint": "^8.45.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}
