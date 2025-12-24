@@ -26,7 +26,7 @@ export default function Home(): ReactNode {
           <div className={styles.featuresGrid}>
             <FeatureCard
               title="Framework Agnostic"
-              description="Write your business logic once and reuse it across React, Solid, Svelte, and any framework"
+              description="Write your business logic once and reuse it across different frameworks"
             />
             <FeatureCard
               title="Clean Architecture"
@@ -45,8 +45,8 @@ export default function Home(): ReactNode {
               description="Test your business logic in isolation without framework mocking"
             />
             <FeatureCard
-              title="Reusable"
-              description="Share business logic between teams and projects using different frameworks"
+              title="Flexible"
+              description="Share logics between client-side and server-side"
             />
           </div>
         </section>

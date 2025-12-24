@@ -1,6 +1,6 @@
 # Installation
 
-Install xndr packages using your preferred package manager.
+Install `xndr` packages using your preferred package manager.
 
 ## Package Manager
 
@@ -56,14 +56,14 @@ pnpm add @xndrjs/devtools-react
 
 ## TypeScript
 
-All xndr packages are written in TypeScript and include type definitions. No additional type packages are needed.
+All `xndr` packages are written in TypeScript and include type definitions. No additional type packages are needed.
 
 ## Peer Dependencies
 
 ### @xndrjs/core
 
-- `fast-deep-equal` ^3.1.3 (for equality checks)
-- `immer` ^10.0.0 (optional, for immutable updates)
+- `fast-deep-equal` ^3.1.3
+- `immer` ^10.0.0
 
 ### Framework Adapters
 
@@ -73,5 +73,5 @@ All xndr packages are written in TypeScript and include type definitions. No add
 
 ## Next Steps
 
-After installation, check out the [Core Concepts](./concepts.md) guide to understand how to use xndr in your application.
+After installation, check out the [Core Concepts](./concepts.md) guide to understand how to use `xndr` in your application.
 

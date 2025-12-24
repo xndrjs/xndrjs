@@ -1,10 +1,10 @@
 # Fundamental Concepts
 
-Understanding the fundamental concepts of xndr will help you build effective framework-agnostic state management.
+Understanding the fundamental concepts of `xndr` will help you build effective framework-agnostic state management.
 
 ## StatePort Pattern
 
-The `StatePort` interface is the foundation of xndr. It provides a framework-agnostic abstraction for reactive state.
+The `StatePort` interface is the foundation of `xndr`. It provides a framework-agnostic abstraction for reactive state.
 
 ### StatePort Interface
 
@@ -94,7 +94,7 @@ export class CounterManager {
 }
 ```
 
-**Note**: this is a very basic example, of course the manager class could simply accept a `number` parameter in its constructor, and just use it as a default value. But there may be cases in which a state is created elsewhere, for example (in React) using a third party library which uses `useState`. The key takeaway here is that **you can use StatePort as the abstraction of a reactive state**, whether it's created within a FE framework (React, Solid, Svelte...) or as a `ReactiveValue` from `@xndrjs/core`. It's the framework-agnostic representation of a reactive state.
+**Note**: In this specific case, the manager class could simply accept a `number` parameter in its constructor and use it as a default value. However, this is just a toy example. The true value of the StatePort pattern, in a real case scenario, lies in its ability to integrate any framework-specific state management (e.g., `useState` in React, signals in Solid, Runes in Svelte) while keeping external classes focused solely on framework-agnostic business logic. This design also enables **progressive integration** of `xndr` into your codebase, allowing you to adopt it incrementally without requiring a full rewrite. 
 
 This pattern allows your business logic to work with:
 - **Framework state**: When a StatePort is passed from React (or Solid, Svelte)
@@ -158,7 +158,7 @@ Computed values are memoized by default. The computation function only runs when
 
 ## Lifecycle Management
 
-xndr uses the `Disposable` pattern for cleanup. Objects that need cleanup implement `Symbol.dispose`.
+`xndr` uses the `Disposable` pattern for cleanup. Objects that need cleanup implement `Symbol.dispose`.
 
 ### DisposableResource
 
@@ -188,7 +188,7 @@ manager[Symbol.dispose](); // Cleanup happens automatically
 
 ## Framework Integration
 
-xndr provides adapters to connect `StatePort` instances to framework reactivity systems.
+`xndr` provides adapters to connect `StatePort` instances to framework reactivity systems.
 
 **Business Logic Class:**
 
@@ -279,7 +279,7 @@ function Counter() {
 
 ## Patterns
 
-xndr includes several design patterns:
+`xndr` includes several design patterns:
 
 - **CQRS**: Separate commands (mutations) from queries (reads)
 - **FSM**: Finite State Machines for managing complex state transitions
