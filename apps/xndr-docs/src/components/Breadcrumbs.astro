@@ -1,6 +1,6 @@
 ---
 interface Props {
-  items: Array<{ label: string; href: string }>;
+  items: Array<{ label: string; href: string; disabled?: boolean }>;
 }
 
 const { items } = Astro.props;
@@ -10,7 +10,7 @@ const { items } = Astro.props;
   <ol class="breadcrumbs__list">
     {items.map((item, index) => (
       <li class={`breadcrumbs__item ${index === items.length - 1 ? 'breadcrumbs__item--active' : ''}`}>
-        {index === items.length - 1 ? (
+        {index === items.length - 1 || item.disabled ? (
           <span class="breadcrumbs__link">{item.label}</span>
         ) : (
           <a href={item.href} class="breadcrumbs__link">{item.label}</a>
@@ -22,7 +22,7 @@ const { items } = Astro.props;
 
 <style>
   .breadcrumbs {
-    font-size: 1rem;
+    font-size: 1.125rem;
     margin: 0;
     margin-bottom: 1rem;
     padding: 0;
@@ -39,7 +39,7 @@ const { items } = Astro.props;
   }
 
   .breadcrumbs__item {
-    font-size: 1rem;
+    font-size: 1.125rem;
     display: flex;
     align-items: center;
   }
@@ -51,7 +51,8 @@ const { items } = Astro.props;
   }
 
   .breadcrumbs__link {
-    font-size: 1rem;
+    font-size: 1.125rem;
+    font-weight: 500;
     color: rgba(255, 255, 255, 0.7);
     transition: color 0.2s ease;
     text-decoration: none;
@@ -61,6 +62,11 @@ const { items } = Astro.props;
     color: var(--xndr-primary-text);
   }
 
+  /* Disabled items (spans) should not change color on hover */
+  .breadcrumbs__item span.breadcrumbs__link:hover {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
   .breadcrumbs__item--active {
     background: transparent !important;
   }
@@ -68,7 +74,12 @@ const { items } = Astro.props;
   .breadcrumbs__item--active .breadcrumbs__link {
     color: var(--xndr-primary-text);
     background: transparent;
-    font-size: 1rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+
+  .breadcrumbs__link:not(a) {
+    cursor: default;
   }
 </style>
 
