@@ -32,24 +32,24 @@ The monorepo is organized into packages (libraries) and apps (applications):
 
 ```mermaid
 graph TB
-    subgraph packages[Packages - Published Libraries]
-        core[@xndrjs/core]
-        adapterReact[@xndrjs/adapter-react]
-        adapterSolid[@xndrjs/adapter-solid]
-        adapterSvelte[@xndrjs/adapter-svelte]
-        cqrs[@xndrjs/cqrs]
-        fsm[@xndrjs/fsm]
-        memento[@xndrjs/memento]
-        devtools[@xndrjs/devtools-react]
-        configEslint[@xndrjs/config-eslint]
-        configTs[@xndrjs/config-typescript]
+    subgraph packages["Packages - Published Libraries"]
+        core["@xndrjs/core"]
+        adapterReact["@xndrjs/adapter-react"]
+        adapterSolid["@xndrjs/adapter-solid"]
+        adapterSvelte["@xndrjs/adapter-svelte"]
+        cqrs["@xndrjs/cqrs"]
+        fsm["@xndrjs/fsm"]
+        memento["@xndrjs/memento"]
+        devtools["@xndrjs/devtools-react"]
+        configEslint["@xndrjs/config-eslint"]
+        configTs["@xndrjs/config-typescript"]
     end
     
-    subgraph apps[Apps - Applications]
-        demoReact[demo-react]
-        demoSolid[demo-solid]
-        demoSvelte[demo-svelte]
-        docs[xndr-docs]
+    subgraph apps["Apps - Applications"]
+        demoReact["demo-react"]
+        demoSolid["demo-solid"]
+        demoSvelte["demo-svelte"]
+        docs["xndr-docs"]
     end
     
     core --> adapterReact
@@ -68,6 +68,23 @@ graph TB
     adapterSvelte --> demoSvelte
     
     devtools --> demoReact
+    
+    style packages fill:#ffe6e6
+    style apps fill:#ffe6e6
+    style core fill:#f5f5f5
+    style adapterReact fill:#f5f5f5
+    style adapterSolid fill:#f5f5f5
+    style adapterSvelte fill:#f5f5f5
+    style cqrs fill:#f5f5f5
+    style fsm fill:#f5f5f5
+    style memento fill:#f5f5f5
+    style devtools fill:#f5f5f5
+    style configEslint fill:#f5f5f5
+    style configTs fill:#f5f5f5
+    style demoReact fill:#f5f5f5
+    style demoSolid fill:#f5f5f5
+    style demoSvelte fill:#f5f5f5
+    style docs fill:#f5f5f5
 ```
 
 ## Packages
