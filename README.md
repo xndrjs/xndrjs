@@ -31,6 +31,7 @@ Just as Alexander cut through the knot, `xndr` helps you make a clean cut betwee
 The monorepo is organized into packages (libraries) and apps (applications):
 
 ```mermaid
+%%{init: {'theme':'dark'}}%%
 graph TB
     subgraph packages["Packages - Published Libraries"]
         core["@xndrjs/core"]
@@ -69,22 +70,11 @@ graph TB
     
     devtools --> demoReact
     
-    style packages fill:#ffe6e6
-    style apps fill:#ffe6e6
-    style core fill:#f5f5f5
-    style adapterReact fill:#f5f5f5
-    style adapterSolid fill:#f5f5f5
-    style adapterSvelte fill:#f5f5f5
-    style cqrs fill:#f5f5f5
-    style fsm fill:#f5f5f5
-    style memento fill:#f5f5f5
-    style devtools fill:#f5f5f5
-    style configEslint fill:#f5f5f5
-    style configTs fill:#f5f5f5
-    style demoReact fill:#f5f5f5
-    style demoSolid fill:#f5f5f5
-    style demoSvelte fill:#f5f5f5
-    style docs fill:#f5f5f5
+    style packages fill:#666666
+    style apps fill:#666666
+    
+    linkStyle default stroke-width:3px
+    linkStyle default stroke-width:3px
 ```
 
 ## Packages
