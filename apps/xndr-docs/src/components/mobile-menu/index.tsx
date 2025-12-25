@@ -146,7 +146,7 @@ export default function MobileMenu({ isOpen: externalIsOpen, setIsOpen: external
                 // For docSidebar, link to the first doc in the sidebar dynamically
                 const docLink = item.sidebarId && docLinks[item.sidebarId] 
                   ? docLinks[item.sidebarId]
-                  : '/docs';
+                  : '/docs/getting-started/introduction';
                 
                 return (
                   <li key={index} className={styles.mobileMenuItem}>

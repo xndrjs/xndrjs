@@ -6,7 +6,7 @@
 
 The name `xndr` (pronounced "xander") comes from **Alexander** the Great, who famously cut the Gordian knot: a symbol of cutting through complexity with a radical solution.
 
-Just as Alexander cut through the knot, `xndr` helps you make a clean cut between UI-specific state (which belongs to the framework) and domain entity state management (which should be framework-agnostic and reusable), wherever needed. This separation ensures that your business logic remains independent of any frontend framework, making it truly reusable across different projects and teams.
+Just as Alexander cut through the knot, `xndr` helps you make a clean cut between UI-specific state (i.e. `isOpen` for a modal) and domain entity state management (which should be framework-agnostic and reusable), wherever needed. This separation ensures that your business logic remains independent of any frontend framework, making it truly reusable across different projects and teams.
 
 ## Core Philosophy
 
