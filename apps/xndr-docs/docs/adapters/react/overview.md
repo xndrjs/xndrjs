@@ -25,7 +25,7 @@ The React adapter provides hooks that connect `StatePort` instances to React's r
 - **`useStatePort`** - Convert React `useState` to a `StatePort`
 - **`useCreateStatePort`** - Create a `StatePort` with React state management
 - **`useFSM`** - Initialize an FSM context manager
-- **`useStableReference`** - Get a stable reference to a value
+- **`useViewModel`** - Create and manage ViewModel instances with automatic cleanup
 
 ## Quick Start
 

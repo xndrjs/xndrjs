@@ -34,6 +34,5 @@ xndrjs-*.tgz
 .cursor
 context
 
-
 # Generated files
 scripts/vite-aliases.generated.json

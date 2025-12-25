@@ -32,7 +32,7 @@ interface EventHandlersOnBuilder {
  *
  * @example
  * ```typescript
- * class MyClass extends DisposableResource {
+ * class MyClass extends ViewModel {
  *   private _handlers = createEventBusHandlers(this, eventBus)
  *     .on(MyEvent, async (event) => { /* handle *\/ })
  *     .on(OtherEvent, async (event) => { /* handle *\/ })

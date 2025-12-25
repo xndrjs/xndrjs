@@ -45,20 +45,20 @@ Just as Alexander cut through the knot, `xndr` helps you make a clean cut betwee
 
 The `StatePort` interface provides a framework-agnostic way to work with reactive state. It defines three methods:
 
-- `get()` - Get the current value
-- `set(value)` - Set a new value
-- `subscribe(callback)` - Subscribe to value changes
+- `get()` - get the current value
+- `set(value)` - set a new value
+- `subscribe(callback)` - subscribe to value changes
 
-This simple interface allows your business logic to work with any framework's reactivity system through adapters.
+This simple interface allows your business logic to work with the reactivity systems of many different frameworks through adapters.
 
 ### Framework Agnosticism
 
-`xndr` packages are written in pure TypeScript with no framework dependencies. Your business logic classes can be:
+`xndr` packages are written in pure TypeScript with no framework dependencies. Your business logics can be:
 
-- Tested in isolation (no framework mocking needed)
-- Reused across multiple frameworks in the same project
-- Shared between different teams using different frameworks
-- Migrated from one framework to another without rewriting business logic
+- tested in isolation (no framework mocking needed)
+- reused across multiple frameworks in the same project
+- shared between different teams using different frameworks
+- migrated from one framework to another without rewriting business logic
 
 ## Getting Started
 

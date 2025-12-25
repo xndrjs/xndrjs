@@ -18,20 +18,19 @@ interface StatePort<T> {
 
 **Methods:**
 
-- **`get()`**: Returns the current value
-- **`set(value)`**: Updates the value (accepts a value or updater function)
-- **`subscribe(callback)`**: Subscribes to value changes, returns an unsubscribe function
+- **`get()`**: returns the current value
+- **`set(value)`**: updates the value (accepts a value or updater function)
+- **`subscribe(callback)`**: subscribes to value changes, returns an unsubscribe function
 
 ### Why StatePort?
 
 StatePort is an abstraction for reactive state, inspired by the "port" concept in hexagonal architecture. Just as ports define interfaces that allow your application to work with different adapters (databases, APIs, etc.), StatePort defines a common interface for reactive state. This abstraction enables you to work with `ReactiveValue` from the core package, but also inject reactive states from various frameworks (React, Solid, Svelte) when needed, making your business logic reactive to framework-specific state while remaining framework-agnostic.
 
-The StatePort pattern allows you to:
+The StatePort pattern allows you to write business logic that doesn't depend on any specific framework, so you can
 
-1. Write business logic that doesn't depend on any specific framework
-2. Swap frameworks without changing your business logic
-3. Test your logic without framework mocking
-4. Share code between different frontend projects
+1. swap frameworks without rewriting your business logic
+2. test your logic without framework mocking
+3. share code between different frontend projects
 
 ### Example
 
@@ -41,7 +40,7 @@ This example demonstrates how StatePort allows you to inject framework-specific 
 
 ```tsx
 import { useState } from 'react';
-import { useStatePort, useStableReference } from '@xndrjs/adapter-react';
+import { useStatePort, useViewModel } from '@xndrjs/adapter-react';
 import { CounterManager } from './counter-manager';
 
 function CounterComponent() {
@@ -52,7 +51,7 @@ function CounterComponent() {
   const countPort = useStatePort(count, setCount);
   
   // Create manager instance with stable reference
-  const manager = useStableReference(() => 
+  const manager = useViewModel(() => 
     new CounterManager(countPort)
   );
   
@@ -94,11 +93,11 @@ export class CounterManager {
 }
 ```
 
-**Note**: In this specific case, the manager class could simply accept a `number` parameter in its constructor and use it as a default value. However, this is just a toy example. The true value of the StatePort pattern, in a real case scenario, lies in its ability to integrate any framework-specific state management (e.g., `useState` in React, signals in Solid, Runes in Svelte) while keeping external classes focused solely on framework-agnostic business logic. This design also enables **progressive integration** of `xndr` into your codebase, allowing you to adopt it incrementally without requiring a full rewrite.
+**Note**: in this specific case, the manager class could simply accept a `number` parameter in its constructor and use it as a default value. However, this is just a toy example. The true value of the StatePort pattern, in a real case scenario, lies in its ability to integrate any framework-specific state management (e.g., `useState` in React, signals in Solid, Runes in Svelte) while keeping external classes focused solely on framework-agnostic business logic. This design also enables **progressive integration** of `xndr` into your codebase, allowing you to adopt it incrementally without requiring a full rewrite.
 
 This pattern allows your business logic to work with:
-- **Framework state**: When a StatePort is passed from React (or Solid, Svelte)
-- **Standalone state**: When no StatePort is provided, it uses ReactiveValue internally
+- **Framework state**: when a StatePort is passed from React (or Solid, Svelte)
+- **Standalone state**: when no StatePort is provided, it can instantiate ReactiveValue internally
 
 The business logic remains completely framework-agnostic while being reactive to framework state when needed.
 
@@ -135,15 +134,18 @@ Computed values automatically update when their dependencies change. They're der
 ### Creating Computed Values
 
 ```typescript
-import { ReactiveValue, createComputed } from '@xndrjs/core';
+import { ReactiveValue, createComputed, ViewModel } from '@xndrjs/core';
 
 const a = new ReactiveValue(2);
 const b = new ReactiveValue(3);
 
 // Create a computed value that depends on a and b
+// In tests or global contexts, use a ViewModel instance
+class TestViewModel extends ViewModel {}
+const testOwner = new TestViewModel();
 const sum = createComputed(a, b)
   .as((x, y) => x + y)
-  .for({ [Symbol.dispose]() {} }); // Owner for cleanup
+  .for(testOwner); // Owner for cleanup
 
 console.log(sum.get()); // 5
 
@@ -160,17 +162,18 @@ Computed values are memoized by default. The computation function only runs when
 
 `xndr` uses the `Disposable` pattern for cleanup. Objects that need cleanup implement `Symbol.dispose`.
 
-### DisposableResource
+### ViewModel
 
-For classes, use `DisposableResource`:
+In the View layer, instantiate `ViewModel` with framework hooks:
 
 ```typescript
-import { DisposableResource, ReactiveValue, createComputed } from '@xndrjs/core';
+import { ViewModel, ReactiveValue, createComputed } from '@xndrjs/core';
+import { useViewModel } from '@xndrjs/adapter-react';
 
-class MyManager extends DisposableResource {
-  private count = new ReactiveValue(0);
+class CounterVM extends ViewModel {
+  count = new ReactiveValue(0);
   
-  private doubled = createComputed(this.count)
+  doubled = createComputed(this.count)
     .as((c) => c * 2)
     .for(this); // 'this' is the owner - this requires cleanup
   
@@ -179,11 +182,12 @@ class MyManager extends DisposableResource {
   }
 }
 
-// When the manager is disposed, all subscriptions are cleaned up
-// Note: ReactiveValue itself does NOT need cleanup
-const manager = new MyManager();
-// ... use manager
-manager[Symbol.dispose](); // Cleanup happens automatically
+// In a component, use with useViewModel for automatic cleanup
+function Counter() {
+  const vm = useViewModel(() => new CounterVM());
+  // ... use vm
+  // Cleanup happens automatically when component unmounts
+}
 ```
 
 ## Framework Integration
@@ -193,9 +197,9 @@ manager[Symbol.dispose](); // Cleanup happens automatically
 **Business Logic Class:**
 
 ```typescript
-import { ReactiveValue, createComputed, DisposableResource } from '@xndrjs/core';
+import { ReactiveValue, createComputed, ViewModel } from '@xndrjs/core';
 
-export class CounterManager extends DisposableResource {
+export class CounterManager extends ViewModel {
   public count = new ReactiveValue(0);
   
   public doubled = createComputed(this.count)
@@ -215,11 +219,11 @@ export class CounterManager extends DisposableResource {
 ### React
 
 ```tsx
-import { useReactiveValue, useStableReference } from '@xndrjs/adapter-react';
+import { useReactiveValue, useViewModel } from '@xndrjs/adapter-react';
 import { CounterManager } from './counter-manager';
 
 function Counter() {
-  const manager = useStableReference(() => new CounterManager());
+  const manager = useViewModel(() => new CounterManager());
   const count = useReactiveValue(manager.count);
   const doubled = useReactiveValue(manager.doubled);
   

@@ -7,8 +7,7 @@ import {
   ReactiveValue,
   ReactiveObject,
   createComputed,
-  SubscriptionsRegistry,
-  type Disposable,
+  ViewModel,
 } from "@xndrjs/core";
 import { devtools, installConsoleAPI } from "./api";
 import { getDevToolsHook } from "../core/hook";
@@ -16,15 +15,20 @@ import { getDevToolsStore } from "../core/store";
 import { DevToolsEventType } from "../core/types";
 import { initDevTools } from "../init";
 
-function createTestOwner(): Disposable {
-  return {
-    [Symbol.dispose]() {
-      SubscriptionsRegistry.cleanup(this as Disposable);
-    },
-  };
-}
+class TestViewModel extends ViewModel {}
 
 describe("DevTools Console API", () => {
+  const owners: ViewModel[] = [];
+
+  afterEach(() => {
+    // Cleanup all ViewModels created during tests
+    owners.forEach((owner) => {
+      if (!owner.disposed) {
+        owner[Symbol.dispose]();
+      }
+    });
+    owners.length = 0;
+  });
   let consoleLogSpy: ReturnType<typeof vi.spyOn>;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
@@ -84,7 +88,7 @@ describe("DevTools Console API", () => {
     describe("computedValue", () => {
       it("should monitor a ComputedValue instance", () => {
         const source = new ReactiveValue(10);
-        const owner = createTestOwner();
+        const owner = new TestViewModel();
         const computed = createComputed(source)
           .as((value) => value * 2)
           .for(owner);
@@ -145,7 +149,7 @@ describe("DevTools Console API", () => {
       describe("graph", () => {
         it("should log dependency graph", () => {
           const source = new ReactiveValue(10);
-          const owner = createTestOwner();
+          const owner = new TestViewModel();
           const computed = createComputed(source)
             .as((value) => value * 2)
             .for(owner);
@@ -381,7 +385,8 @@ describe("DevTools Console API", () => {
 
     it("should track dependencies correctly", () => {
       const source = new ReactiveValue(10);
-      const owner = createTestOwner();
+      const owner = new TestViewModel();
+      owners.push(owner);
       const computed = createComputed(source)
         .as((value) => value * 2)
         .for(owner);

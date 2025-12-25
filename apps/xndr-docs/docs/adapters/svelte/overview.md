@@ -26,18 +26,19 @@ The Svelte adapter provides two main functions:
 
 ```html
 <script>
-  import { reactiveValue, toStatePort } from '@xndrjs/adapter-svelte';
-  import { ReactiveValue, createComputed } from '@xndrjs/core';
+  import { reactiveValue, toStatePort, useViewModel } from '@xndrjs/adapter-svelte';
+  import { ReactiveValue, createComputed, ViewModel } from '@xndrjs/core';
 
-  // Use a StatePort with Svelte
-  const count = new ReactiveValue(0);
-  const countStore = reactiveValue(() => count);
+  class CounterVM extends ViewModel {
+    count = new ReactiveValue(0);
+    doubled = createComputed(this.count)
+      .as((c) => c * 2)
+      .for(this);
+  }
 
-  // Use with computed values
-  const doubled = createComputed(count)
-    .as((c) => c * 2)
-    .for({ [Symbol.dispose]() {} });
-  const doubledStore = reactiveValue(() => doubled);
+  const vm = useViewModel(() => new CounterVM());
+  const countStore = reactiveValue(() => vm.count);
+  const doubledStore = reactiveValue(() => vm.doubled);
 
   // Convert Svelte $state to StatePort
   let text = $state("");

@@ -24,7 +24,7 @@ export class SubscriptionsRegistry {
 
   /**
    * Removes all registered subscriptions for an owner and executes them.
-   * Called automatically by DisposableResource[Symbol.dispose]().
+   * Called automatically by ViewModel[Symbol.dispose]().
    *
    * @param owner - The Disposable object to clean up subscriptions for
    */

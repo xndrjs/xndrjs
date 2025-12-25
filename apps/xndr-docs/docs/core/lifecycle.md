@@ -12,29 +12,30 @@ interface Disposable {
 
 Any object implementing `[Symbol.dispose]()` is considered disposable and can be used with xndr lifecycle management.
 
-## DisposableResource
+## ViewModel
 
-`DisposableResource` is a base class that provides automatic cleanup for your classes.
+`ViewModel` is a base class to be instantiated in the View layer, that provides automatic cleanup of resources and subscriptions. ViewModels are intended to be used with framework-specific hooks (e.g., `useViewModel` in React) for automatic lifecycle management.
 
 ### Class Definition
 
 ```typescript
-abstract class DisposableResource implements Disposable {
+abstract class ViewModel implements Disposable {
+  readonly disposed: boolean;
   [Symbol.dispose](): void;
 }
 ```
 
 ### Usage
 
-Extend `DisposableResource` to get automatic cleanup:
+Extend `ViewModel` to get automatic cleanup:
 
 ```typescript
-import { DisposableResource, ReactiveValue, createComputed } from '@xndrjs/core';
+import { ViewModel, ReactiveValue, createComputed } from '@xndrjs/core';
 
-class MyManager extends DisposableResource {
-  private count = new ReactiveValue(0);
+class CounterVM extends ViewModel {
+  count = new ReactiveValue(0);
   
-  private doubled = createComputed(this.count)
+  doubled = createComputed(this.count)
     .as((c) => c * 2)
     .for(this); // 'this' is the owner
   
@@ -43,98 +44,17 @@ class MyManager extends DisposableResource {
   }
 }
 
-// When disposed, all subscriptions are cleaned up
-const manager = new MyManager();
-// ... use manager
-manager[Symbol.dispose](); // Cleanup happens automatically
+// In a component, use with useViewModel hook for automatic cleanup
 ```
 
 ### Automatic Cleanup
 
-When a `DisposableResource` is disposed:
+When a `ViewModel` is disposed:
 
 - All computed values created with `.for(this)` are cleaned up
 - Subscriptions registered in `SubscriptionsRegistry` are unsubscribed
 - The `[Symbol.dispose]()` method is called automatically
-
-## makeDisposableObject
-
-For plain objects, use `makeDisposableObject` to add automatic disposal:
-
-### Function Signature
-
-```typescript
-function makeDisposableObject<T extends object>(
-  obj: T,
-  options?: MakeDisposableObjectOptions<T>
-): T & Disposable;
-```
-
-**Type Parameters:**
-- `T` - The type of the object (must extend `object`)
-
-**Parameters:**
-- `obj: T` - The plain object to make disposable
-- `options?: MakeDisposableObjectOptions<T>` - Optional configuration
-
-**Returns:** The same object with `[Symbol.dispose]()` method added
-
-### Options
-
-```typescript
-interface MakeDisposableObjectOptions<T extends object = object> {
-  /**
-   * Array of property paths to exclude from auto-disposal.
-   * Supports nested paths using dot notation (e.g., "meta.user").
-   */
-  exclude?: Array<PathOf<T>>;
-}
-```
-
-### Auto-Detection
-
-`makeDisposableObject` automatically detects properties that implement `Disposable` (have `Symbol.dispose`) and adds cleanup logic.
-
-**Example:**
-
-```typescript
-import { makeDisposableObject, ReactiveValue, createComputed } from '@xndrjs/core';
-
-function createCounterManager() {
-  const count = new ReactiveValue(0);
-  const doubled = createComputed(count)
-    .as((c) => c * 2)
-    .for({ [Symbol.dispose]() {} });
-  
-  return makeDisposableObject({
-    count,
-    doubled,
-    increment() {
-      count.set((prev) => prev + 1);
-    },
-  });
-  // Automatically detects 'count' and 'doubled' as disposable
-}
-
-const manager = createCounterManager();
-// ... use manager
-manager[Symbol.dispose](); // Cleanup happens automatically
-```
-
-### Excluding Properties
-
-Use the `exclude` option to exclude specific properties from auto-disposal:
-
-```typescript
-const manager = makeDisposableObject({
-  count: new ReactiveValue(0),
-  meta: {
-    user: {
-      [Symbol.dispose]: () => {} // Has Symbol.dispose but we don't want to auto-dispose it
-    }
-  }
-}, { exclude: ['meta.user'] });
-```
+- The `disposed` flag is set to `true` (useful for React Strict Mode)
 
 ## SubscriptionsRegistry
 
@@ -154,7 +74,7 @@ class SubscriptionsRegistry {
 ```typescript
 import { SubscriptionsRegistry } from '@xndrjs/core';
 
-class MyManager extends DisposableResource {
+class MyViewModel extends ViewModel {
   private subscriptions = new SubscriptionsRegistry();
   private port: StatePort<number>;
   
@@ -173,7 +93,7 @@ class MyManager extends DisposableResource {
   
   [Symbol.dispose](): void {
     this.subscriptions.clear(); // Cleanup all subscriptions
-    super[Symbol.dispose]();
+    super._cleanup(); // Call base class cleanup
   }
 }
 ```
@@ -182,106 +102,202 @@ class MyManager extends DisposableResource {
 
 ### React
 
-In React, use the `useDisposable` hook (if available) or cleanup in `useEffect`:
+In React, use the `useViewModel` hook for automatic cleanup:
 
 ```typescript
-import { useEffect } from 'react';
-import { DisposableResource } from '@xndrjs/core';
+import { useViewModel } from '@xndrjs/adapter-react';
+import { ViewModel, ReactiveValue, createComputed } from '@xndrjs/core';
+import { useReactiveValue } from '@xndrjs/adapter-react';
 
-function useMyManager() {
-  useEffect(() => {
-    const manager = new MyManager();
-    return () => {
-      manager[Symbol.dispose]();
-    };
-  }, []);
+class CounterVM extends ViewModel {
+  count = new ReactiveValue(0);
+  doubled = createComputed(this.count)
+    .as((c) => c * 2)
+    .for(this);
+  
+  increment() {
+    this.count.set((prev) => prev + 1);
+  }
+}
+
+function Counter() {
+  const vm = useViewModel(() => new CounterVM());
+  const count = useReactiveValue(vm.count);
+  const doubled = useReactiveValue(vm.doubled);
+  
+  return (
+    <div>
+      <div>Count: {count}</div>
+      <div>Doubled: {doubled}</div>
+      <button onClick={() => vm.increment()}>+</button>
+    </div>
+  );
 }
 ```
 
+**React Strict Mode**: The `useViewModel` hook automatically handles React Strict Mode (where cleanup runs twice in development) by checking the `disposed` flag and recreating the ViewModel if needed.
+
 ### Solid
 
-In Solid, use `onCleanup`:
+In Solid, use `useViewModel` hook:
 
 ```typescript
-import { onCleanup } from 'solid-js';
+import { useViewModel } from '@xndrjs/adapter-solid';
+import { ViewModel, ReactiveValue, createComputed } from '@xndrjs/core';
+import { useReactiveValue } from '@xndrjs/adapter-solid';
 
-function createMyManager() {
-  const manager = new MyManager();
-  onCleanup(() => {
-    manager[Symbol.dispose]();
-  });
-  return manager;
+class CounterVM extends ViewModel {
+  count = new ReactiveValue(0);
+  doubled = createComputed(this.count)
+    .as((c) => c * 2)
+    .for(this);
+  
+  increment() {
+    this.count.set((prev) => prev + 1);
+  }
+}
+
+function Counter() {
+  const vm = useViewModel(() => new CounterVM());
+  const count = useReactiveValue(() => vm.count);
+  const doubled = useReactiveValue(() => vm.doubled);
+  
+  return (
+    <div>
+      <div>Count: {count()}</div>
+      <div>Doubled: {doubled()}</div>
+      <button onClick={() => vm.increment()}>+</button>
+    </div>
+  );
 }
 ```
 
 ### Svelte
 
-In Svelte, use `onDestroy`:
+In Svelte, use `useViewModel` hook:
 
 ```html
 <script>
-  import { onDestroy } from 'svelte';
-  import { DisposableResource } from '@xndrjs/core';
+  import { useViewModel } from '@xndrjs/adapter-svelte';
+  import { reactiveValue } from '@xndrjs/adapter-svelte';
+  import { ViewModel, ReactiveValue, createComputed } from '@xndrjs/core';
   
-  const manager = new MyManager();
-  onDestroy(() => {
-    manager[Symbol.dispose]();
-  });
+  class CounterVM extends ViewModel {
+    count = new ReactiveValue(0);
+    doubled = createComputed(this.count)
+      .as((c) => c * 2)
+      .for(this);
+    
+    increment() {
+      this.count.set((prev) => prev + 1);
+    }
+  }
+
+  const vm = useViewModel(() => new CounterVM());
+  const count = reactiveValue(() => vm.count);
+  const doubled = reactiveValue(() => vm.doubled);
 </script>
+
+<div>Count: {$count}</div>
+<div>Doubled: {$doubled}</div>
+<button on:click={() => vm.increment()}>+</button>
 ```
 
 ## Best Practices
 
-1. **Always dispose resources** - Prevent memory leaks by disposing managers when done
-2. **Use DisposableResource for classes** - Provides automatic cleanup
-3. **Use makeDisposableObject for plain objects** - Adds disposal to plain objects
+1. **Always dispose resources** - Prevent memory leaks by disposing ViewModels when done
+2. **Instantiate ViewModel in the View layer** - ViewModels are intended to be instantiated in the View layer, use with `useViewModel` hook
+3. **Use dependency injection for managers** - Managers should receive `Disposable` owner via constructor, not extend `ViewModel`
 4. **Register subscriptions** - Use `SubscriptionsRegistry` or computed `.for()` for cleanup
 5. **Don't dispose shared resources** - Only dispose resources you own
 
-## Example: Complete Manager
+## Example: ViewModel with Manager Pattern
+
+For simple cases, implement logic directly in ViewModel:
 
 ```typescript
 import {
-  DisposableResource,
+  ViewModel,
+  ReactiveValue,
+  createComputed,
+} from '@xndrjs/core';
+
+class TodoVM extends ViewModel {
+  todos = new ReactiveValue<Todo[]>([]);
+  todoCount = createComputed(this.todos)
+    .as((todos) => todos.length)
+    .for(this);
+  
+  addTodo(todo: Todo) {
+    this.todos.set((prev) => [...prev, todo]);
+  }
+}
+
+// Usage in component
+function TodoApp() {
+  const vm = useViewModel(() => new TodoVM());
+  const todos = useReactiveValue(vm.todos);
+  const count = useReactiveValue(vm.todoCount);
+  // ... component code
+}
+```
+
+For complex cases with reusable managers, use dependency injection:
+
+```typescript
+import {
+  ViewModel,
   ReactiveValue,
   createComputed,
   SubscriptionsRegistry,
 } from '@xndrjs/core';
 
-class TodoManager extends DisposableResource {
-  private todos = new ReactiveValue<Todo[]>([]);
-  private subscriptions = new SubscriptionsRegistry();
+// Manager receives owner via DI
+class TodoManager {
+  todos: ReactiveValue<Todo[]>;
+  todoCount: ComputedValue<number>;
   
-  public todoCount = createComputed(this.todos)
+  constructor(protected owner: Disposable, externalPort: StatePort<Todo[]>) {
+    this.todos = new ReactiveValue<Todo[]>([]);
+    this.todoCount = createComputed(this.todos)
     .as((todos) => todos.length)
-    .for(this);
-  
-  constructor(externalPort: StatePort<Todo[]>) {
-    super();
+      .for(owner);
     
     // Subscribe to external port
     const unsubscribe = externalPort.subscribe?.((todos) => {
       this.todos.set(todos);
     });
     if (unsubscribe) {
-      this.subscriptions.add(unsubscribe);
+      SubscriptionsRegistry.register(owner, unsubscribe);
     }
   }
   
   addTodo(todo: Todo) {
     this.todos.set((prev) => [...prev, todo]);
   }
-  
-  [Symbol.dispose](): void {
-    this.subscriptions.clear();
-    super[Symbol.dispose]();
-  }
 }
 
-// Usage
-const manager = new TodoManager(externalPort);
-// ... use manager
-manager[Symbol.dispose](); // All cleanup happens automatically
+// ViewModel uses the manager
+class TodoVM extends ViewModel {
+  private manager: TodoManager;
+  
+  constructor(externalPort: StatePort<Todo[]>) {
+    super();
+    this.manager = new TodoManager(this, externalPort);
+  }
+  
+  get todos() { return this.manager.todos; }
+  get todoCount() { return this.manager.todoCount; }
+  addTodo(todo: Todo) { this.manager.addTodo(todo); }
+}
+
+// Usage in component
+function TodoApp() {
+  const vm = useViewModel(() => new TodoVM(externalPort));
+  const todos = useReactiveValue(vm.todos);
+  const count = useReactiveValue(vm.todoCount);
+  // ... component code
+}
 ```
 
 ## Next Steps

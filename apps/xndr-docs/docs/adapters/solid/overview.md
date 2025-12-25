@@ -23,23 +23,26 @@ The Solid adapter provides `useReactiveValue` hook that connects `StatePort` ins
 ## Quick Start
 
 ```tsx
-import { useReactiveValue } from '@xndrjs/adapter-solid';
-import { ReactiveValue, createComputed } from '@xndrjs/core';
+import { useReactiveValue, useViewModel } from '@xndrjs/adapter-solid';
+import { ReactiveValue, createComputed, ViewModel } from '@xndrjs/core';
+
+class CounterVM extends ViewModel {
+  count = new ReactiveValue(0);
+  doubled = createComputed(this.count)
+    .as((c) => c * 2)
+    .for(this);
+}
 
 function Counter() {
-  const count = new ReactiveValue(0);
-  const doubled = createComputed(count)
-    .as((c) => c * 2)
-    .for({ [Symbol.dispose]() {} });
-  
-  const countValue = useReactiveValue(count); // Solid accessor
-  const doubledValue = useReactiveValue(doubled); // Solid accessor
+  const vm = useViewModel(() => new CounterVM());
+  const countValue = useReactiveValue(() => vm.count); // Solid accessor
+  const doubledValue = useReactiveValue(() => vm.doubled); // Solid accessor
   
   return (
     <div>
       <p>Count: {countValue()}</p>
       <p>Doubled: {doubledValue()}</p>
-      <button onClick={() => count.set((prev) => prev + 1)}>
+      <button onClick={() => vm.count.set((prev) => prev + 1)}>
         Increment
       </button>
     </div>

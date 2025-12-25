@@ -30,7 +30,7 @@ interface MemoCache<T> {
  *
  * @example
  * ```typescript
- * class MyClass extends DisposableResource {
+ * class MyClass extends ViewModel {
  *   private _count = new ReactiveValue(10);
  *   private _doubled = createComputed(this._count)
  *     .as((count) => count * 2) // Type is inferred as number

@@ -2,11 +2,12 @@ import { createEffect, createRoot } from "solid-js";
 import { describe, expect, it, vi } from "vitest";
 import {
   ReactiveValue,
-  SubscriptionsRegistry,
   createComputed,
+  ViewModel,
 } from "@xndrjs/core";
-import type { Disposable } from "@xndrjs/core";
 import { useReactiveValue } from "./useReactiveValue";
+
+class TestViewModel extends ViewModel {}
 
 describe("useReactiveValue (Solid)", () => {
   it("subscribes to ReactiveValue and updates signal", async () => {
@@ -35,11 +36,7 @@ describe("useReactiveValue (Solid)", () => {
     createRoot((rootDispose) => {
       dispose = rootDispose;
       const source = new ReactiveValue(2);
-      const owner: Disposable = {
-        [Symbol.dispose]() {
-          SubscriptionsRegistry.cleanup(this);
-        },
-      };
+      const owner = new TestViewModel();
       const computed = createComputed(source)
         .as((v) => v * 3)
         .for(owner);
@@ -63,11 +60,7 @@ describe("useReactiveValue (Solid)", () => {
     createRoot((rootDispose) => {
       dispose = rootDispose;
       source = new ReactiveValue(1);
-      const owner: Disposable = {
-        [Symbol.dispose]() {
-          SubscriptionsRegistry.cleanup(this);
-        },
-      };
+      const owner = new TestViewModel();
       const computed = createComputed(source)
         .as((v) => v + 1)
         .for(owner);

@@ -83,7 +83,7 @@ graph TB
 - **[@xndrjs/core](packages/core)** - StatePort pattern, reactive values, lifecycle management
   - `ReactiveValue`, `ReactiveObject`, `ReactiveArray`, `ReactiveSet`, `ReactiveMap`
   - `createComputed` for computed values
-  - `DisposableResource` for automatic cleanup
+  - `ViewModel` for automatic cleanup in View layer
 
 ### Framework Adapters
 - **[@xndrjs/adapter-react](packages/adapter-react)** - React integration hooks
@@ -118,9 +118,9 @@ Here's a complete example showing how to create framework-agnostic business logi
 **Business Logic Class:**
 
 ```typescript
-import { ReactiveValue, createComputed, DisposableResource } from '@xndrjs/core';
+import { ReactiveValue, createComputed, ViewModel } from '@xndrjs/core';
 
-export class CounterManager extends DisposableResource {
+export class CounterManager extends ViewModel {
   public count = new ReactiveValue(0);
   
   public doubled = createComputed(this.count)
@@ -140,14 +140,14 @@ export class CounterManager extends DisposableResource {
 **React Component:**
 
 ```tsx
-import { useReactiveValue, useStableReference } from '@xndrjs/adapter-react';
+import { useReactiveValue, useViewModel } from '@xndrjs/adapter-react';
 import { CounterManager } from './counter-manager';
 
 function Counter() {
-  const manager = useStableReference(() => new CounterManager());
+  const manager = useViewModel(() => new CounterManager());
   const count = useReactiveValue(manager.count);
   const doubled = useReactiveValue(manager.doubled);
-  
+
   return (
     <div>
       <div>Count: {count}</div>

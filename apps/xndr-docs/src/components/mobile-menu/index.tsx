@@ -85,6 +85,11 @@ export default function MobileMenu({ isOpen: externalIsOpen, setIsOpen: external
     setIsOpen(!isOpen);
   };
 
+  // Don't render on desktop
+  if (typeof window !== 'undefined' && window.innerWidth > 996) {
+    return null;
+  }
+
   return (
     <>
       {/* Hamburger Button */}

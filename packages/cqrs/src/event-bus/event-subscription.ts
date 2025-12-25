@@ -1,6 +1,4 @@
-export interface Disposable {
-  [Symbol.dispose](): void;
-}
+import type { Disposable } from "@xndrjs/core";
 
 /**
  * Wraps event handler registration and automatically unsubscribes on dispose.
@@ -10,9 +8,9 @@ export interface Disposable {
  *
  * @example
  * ```typescript
- * import { DisposableResource } from "@xndrjs/core";
+ * import { ViewModel } from "@xndrjs/core";
  *
- * class UserManager extends DisposableResource {
+ * class UserManager extends ViewModel {
  *   private eventSubscriptions = new EventSubscription(() => {
  *     return eventBus.registerLocalHandler("UserCreated", (event) => {
  *       // Handle event

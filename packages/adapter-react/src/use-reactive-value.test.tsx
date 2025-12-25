@@ -1,17 +1,24 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { createComputed, type Disposable } from "@xndrjs/core";
+import { createComputed, ViewModel } from "@xndrjs/core";
 
-// Helper to create a disposable owner for tests
-function createTestOwner(): Disposable {
-  return {
-    [Symbol.dispose]() {},
-  };
-}
+// Helper to create a ViewModel for tests
+class TestViewModel extends ViewModel {}
 import { useCreateStatePort } from "./use-create-state-port";
 import { useReactiveValue } from "./use-reactive-value";
 
 describe("useReactiveValue", () => {
+  const owners: ViewModel[] = [];
+
+  afterEach(() => {
+    // Cleanup all ViewModels created during tests
+    owners.forEach((owner) => {
+      if (!owner.disposed) {
+        owner[Symbol.dispose]();
+      }
+    });
+    owners.length = 0;
+  });
   describe("with StatePort", () => {
     it("should return the current value from a StatePort", () => {
       const { result } = renderHook(() => {
@@ -76,7 +83,8 @@ describe("useReactiveValue", () => {
       const { result } = renderHook(() => {
         const aPort = useCreateStatePort(10);
         const bPort = useCreateStatePort(20);
-        const owner = createTestOwner();
+        const owner = new TestViewModel();
+        owners.push(owner);
 
         const computed = createComputed(aPort, bPort)
           .as((aVal, bVal) => aVal + bVal)
@@ -92,7 +100,8 @@ describe("useReactiveValue", () => {
       const { result } = renderHook(() => {
         const aPort = useCreateStatePort(10);
         const bPort = useCreateStatePort(20);
-        const owner = createTestOwner();
+        const owner = new TestViewModel();
+        owners.push(owner);
         const computed = createComputed(aPort, bPort)
           .as((aVal, bVal) => aVal + bVal)
           .for(owner);
@@ -112,7 +121,8 @@ describe("useReactiveValue", () => {
     it("should handle ComputedValue with objects using shallow equality", () => {
       const { result } = renderHook(() => {
         const timeIntPort = useCreateStatePort(65); // 65 seconds
-        const owner = createTestOwner();
+        const owner = new TestViewModel();
+        owners.push(owner);
         const computed = createComputed(timeIntPort)
           .as((timeInt) => {
             const hours = Math.floor(timeInt / 3600);
@@ -162,7 +172,8 @@ describe("useReactiveValue", () => {
       const { result } = renderHook(() => {
         renderCount();
         const timeIntPort = useCreateStatePort(60);
-        const owner = createTestOwner();
+        const owner = new TestViewModel();
+        owners.push(owner);
         const computed = createComputed(timeIntPort)
           .as((timeInt) => {
             // Always creates a new object, even with same values
@@ -207,7 +218,8 @@ describe("useReactiveValue", () => {
       const { result } = renderHook(() => {
         const aPort = useCreateStatePort(2);
         const bPort = useCreateStatePort(3);
-        const owner = createTestOwner();
+        const owner = new TestViewModel();
+        owners.push(owner);
         const sumPort = createComputed(aPort, bPort)
           .as((a, b) => a + b)
           .for(owner);

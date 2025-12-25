@@ -1,20 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { vi } from "vitest";
-import { SubscriptionsRegistry, type Disposable } from "@xndrjs/core";
+import { vi, afterEach } from "vitest";
+import { ViewModel } from "@xndrjs/core";
 import { DomainEvent } from "./event";
 import { EventSerializer } from "./event-serializer";
 import { EventBus } from "./event-bus";
 import { createEventBusHandlers } from "./create-event-bus-handlers";
 
-// Helper to create a disposable owner for tests
-function createTestOwner(): Disposable {
-  return {
-    [Symbol.dispose]() {
-      // Ensure handlers registered in SubscriptionsRegistry are cleaned up
-      SubscriptionsRegistry.cleanup(this as Disposable);
-    },
-  };
-}
+// Helper to create a ViewModel for tests
+class TestViewModel extends ViewModel {}
 import type {
   UntypedDomainEventType,
   RemotePublisherInterface,
@@ -144,6 +137,17 @@ describe("EventSerializer", () => {
 // --------------------------------------------------------------------------
 
 describe("EventBus (local only)", () => {
+  const owners: ViewModel[] = [];
+
+  afterEach(() => {
+    // Cleanup all ViewModels created during tests (except those already disposed)
+    owners.forEach((owner) => {
+      if (!owner.disposed) {
+        owner[Symbol.dispose]();
+      }
+    });
+    owners.length = 0;
+  });
   let bus: EventBus;
   let mockHandler1: UntypedLocalEventHandler;
   let mockHandler2: UntypedLocalEventHandler;
@@ -264,7 +268,8 @@ describe("EventBus (local only)", () => {
     const handler3: UntypedLocalEventHandler = vi.fn(async () => {});
     Object.defineProperty(handler3, "name", { value: "Handler3" });
 
-    const owner = createTestOwner();
+        const owner = new TestViewModel();
+        owners.push(owner);
     createEventBusHandlers(owner, bus)
       .on<UserCreatedEvent>("UserCreated", mockHandler1)
       .on<UserCreatedEvent>("UserCreated", mockHandler2)
@@ -282,7 +287,7 @@ describe("EventBus (local only)", () => {
     const handler3: UntypedLocalEventHandler = vi.fn(async () => {});
     Object.defineProperty(handler3, "name", { value: "Handler3" });
 
-    const owner = createTestOwner();
+        const owner = new TestViewModel();
     createEventBusHandlers(owner, bus)
       .on<UserCreatedEvent>("UserCreated", mockHandler1)
       .on<UserCreatedEvent>("UserCreated", mockHandler2)
@@ -307,7 +312,7 @@ describe("EventBus (local only)", () => {
       value: "UserDeletedHandler",
     });
 
-    const owner = createTestOwner();
+        const owner = new TestViewModel();
     createEventBusHandlers(owner, bus)
       .on<UserCreatedEvent>("UserCreated", mockHandler1)
       .on<UserDeletedEvent>("UserDeleted", userDeletedHandler)
@@ -336,7 +341,7 @@ describe("EventBus (local only)", () => {
     const handler3: UntypedLocalEventHandler = vi.fn(async () => {});
 
     // Use builder pattern for fluent API
-    const owner = createTestOwner();
+        const owner = new TestViewModel();
     createEventBusHandlers(owner, bus)
       .on<UserCreatedEvent>("UserCreated", handler2)
       .on<UserCreatedEvent>("UserCreated", handler3)

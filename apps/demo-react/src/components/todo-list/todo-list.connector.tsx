@@ -1,4 +1,4 @@
-import { useCreateStatePort, useStableReference } from "@xndrjs/adapter-react";
+import { useCreateStatePort, useViewModel } from "@xndrjs/adapter-react";
 import { TodoListManager, NewTodoItemForm } from "@xndrjs/demo-common";
 import { TodoListView } from "./todo-list.view";
 import { useReactiveValue } from "@xndrjs/adapter-react";
@@ -13,7 +13,7 @@ export function TodoListConnector({
   todoListManager,
 }: TodoHistoryConnectorProps) {
   const newTodoTextPort = useCreateStatePort<string>("");
-  const newTodoItemForm = useStableReference(
+  const newTodoItemForm = useViewModel(
     () => new NewTodoItemForm(newTodoTextPort, todoListManager),
   );
 

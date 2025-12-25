@@ -1,11 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   ReactiveValue,
-  SubscriptionsRegistry,
   createComputed,
+  ViewModel,
 } from "@xndrjs/core";
-import type { Disposable } from "@xndrjs/core";
 import { reactiveValue } from "./reactive-value.svelte";
+
+class TestViewModel extends ViewModel {}
 
 describe("reactiveValue (Svelte)", () => {
   it("subscribes to ReactiveValue and updates store", () => {
@@ -27,11 +28,7 @@ describe("reactiveValue (Svelte)", () => {
 
   it("works with ComputedValue via reactiveValue", () => {
     const source = new ReactiveValue(2);
-    const owner: Disposable = {
-      [Symbol.dispose]() {
-        SubscriptionsRegistry.cleanup(this);
-      },
-    };
+    const owner = new TestViewModel();
     const computed = createComputed(source)
       .as((v) => v * 3)
       .for(owner);
@@ -51,11 +48,7 @@ describe("reactiveValue (Svelte)", () => {
 
   it("stops updates after unsubscribe with computed", () => {
     const source = new ReactiveValue(1);
-    const owner: Disposable = {
-      [Symbol.dispose]() {
-        SubscriptionsRegistry.cleanup(this);
-      },
-    };
+    const owner = new TestViewModel();
     const computed = createComputed(source)
       .as((v) => v + 1)
       .for(owner);

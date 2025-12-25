@@ -1,11 +1,12 @@
 import type { StatePort } from "@xndrjs/core";
+import { ViewModel } from "@xndrjs/core";
 import type { TodoListManager } from "./manager";
 
 /**
  * Manages the form state for adding a new todo item.
  * Uses StatePort for framework-agnostic state management.
  */
-export class NewTodoItemForm {
+export class NewTodoItemForm extends ViewModel {
   private _textPort: StatePort<string>;
   private _todoListManager: TodoListManager;
 
@@ -17,6 +18,7 @@ export class NewTodoItemForm {
   }
 
   constructor(textPort: StatePort<string>, todoListManager: TodoListManager) {
+    super();
     this._textPort = textPort;
     this._todoListManager = todoListManager;
   }

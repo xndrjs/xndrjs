@@ -1,15 +1,29 @@
-import { describe, expect, it, vi } from "vitest";
-import type { Disposable } from "./disposable";
+import { describe, expect, it, vi, afterEach } from "vitest";
 import { createComputed } from "./create-computed";
 import type { StatePort } from "./state-port";
 import { SubscriptionsRegistry } from "./subscriptions-registry";
 import { ReactiveValue } from "./reactive-value";
+import { ViewModel } from "./view-model";
+
+class TestViewModel extends ViewModel {}
 
 describe("createComputed", () => {
+  const owners: ViewModel[] = [];
+
+  afterEach(() => {
+    // Cleanup all ViewModels created during tests
+    owners.forEach((owner) => {
+      if (!owner.disposed) {
+        owner[Symbol.dispose]();
+      }
+    });
+    owners.length = 0;
+  });
   it("computes lazily and memoizes until dependencies change", () => {
     const dep = new ReactiveValue(1);
     const compute = vi.fn((value: number) => value * 2);
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
 
     const computed = createComputed(dep).as(compute).for(owner);
 
@@ -30,7 +44,8 @@ describe("createComputed", () => {
   it("supports multiple dependencies and recomputes when any changes", () => {
     const a = new ReactiveValue(2);
     const b = new ReactiveValue(3);
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
 
     const compute = vi.fn((x: number, y: number) => x + y);
     const computed = createComputed(a, b).as(compute).for(owner);
@@ -49,7 +64,8 @@ describe("createComputed", () => {
 
   it("notifies subscribers on dependency changes and supports unsubscribe", async () => {
     const dep = new ReactiveValue(1);
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
     const computed = createComputed(dep)
       .as((value) => value + 1)
       .for(owner);
@@ -73,7 +89,8 @@ describe("createComputed", () => {
   it("deduplicates notifications when multiple dependencies change in the same tick", async () => {
     const a = new ReactiveValue(1);
     const b = new ReactiveValue(2);
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
     const computed = createComputed(a, b)
       .as((x: number, y: number) => x + y)
       .for(owner);
@@ -97,7 +114,8 @@ describe("createComputed", () => {
 
   it("exposes dependencies and enforces read-only setter", () => {
     const dep = new ReactiveValue(7);
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
 
     const computed = createComputed(dep)
       .as((value) => value * value)
@@ -122,7 +140,8 @@ describe("createComputed", () => {
       set: () => {},
       subscribe: vi.fn(() => unsubscribeB),
     };
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
 
     const registerSpy = vi.spyOn(SubscriptionsRegistry, "register");
 
@@ -133,8 +152,8 @@ describe("createComputed", () => {
     expect(registerSpy).toHaveBeenCalledTimes(1);
     expect(registerSpy).toHaveBeenCalledWith(owner, expect.any(Function));
 
-    const cleanup = registerSpy.mock.calls[0][1];
-    cleanup();
+    // Cleanup via ViewModel dispose
+    owner[Symbol.dispose]();
 
     expect(unsubscribeA).toHaveBeenCalledTimes(1);
     expect(unsubscribeB).toHaveBeenCalledTimes(1);

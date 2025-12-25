@@ -1,4 +1,4 @@
-import { type StatePort, DisposableResource } from "@xndrjs/core";
+import { type StatePort, ViewModel } from "@xndrjs/core";
 import type {
   ExtractConfigFromContext,
   FSMContext,
@@ -24,7 +24,7 @@ export class FSMContextManager<
     any
   >,
 >
-  extends DisposableResource
+  extends ViewModel
   implements FSMContext<TConfig>
 {
   /**

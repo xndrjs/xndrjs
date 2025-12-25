@@ -53,20 +53,26 @@ const sum = createComputed(a, b)
 
 ### Lifecycle Management
 
-Use `DisposableResource` for automatic cleanup:
+Instantiate `ViewModel` for automatic cleanup in the View layer:
 
 ```typescript
-import { DisposableResource, ReactiveValue, createComputed } from '@xndrjs/core';
+import { ViewModel, ReactiveValue, createComputed } from '@xndrjs/core';
+import { useViewModel } from '@xndrjs/adapter-react';
 
-class MyManager extends DisposableResource {
-  private count = new ReactiveValue(0);
+class CounterVM extends ViewModel {
+  count = new ReactiveValue(0);
   
-  private doubled = createComputed(this.count)
+  doubled = createComputed(this.count)
     .as((c) => c * 2)
     .for(this); // 'this' is the owner - this requires cleanup
   
-  // Cleanup happens automatically when disposed
+  // Cleanup happens automatically when component unmounts
   // Note: ReactiveValue itself does NOT need cleanup
+}
+
+function Counter() {
+  const vm = useViewModel(() => new CounterVM());
+  // ... use vm
 }
 ```
 
@@ -89,9 +95,8 @@ export { createComputed } from './create-computed';
 export type { ComputedValue } from './computed-value';
 
 // Lifecycle
-export { DisposableResource } from './disposable-resource';
+export { ViewModel } from './view-model';
 export type { Disposable } from './disposable';
-export { makeDisposableObject } from './disposable';
 export { SubscriptionsRegistry } from './subscriptions-registry';
 
 // Utilities

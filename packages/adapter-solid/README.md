@@ -9,15 +9,18 @@ Solid adapter for reactive types from `@xndrjs/core`.
 ## Example
 
 ```ts
-import { ReactiveValue, createComputed } from "@xndrjs/core";
-import { useReactiveValue } from "@xndrjs/adapter-solid";
+import { ReactiveValue, createComputed, ViewModel } from "@xndrjs/core";
+import { useReactiveValue, useViewModel } from "@xndrjs/adapter-solid";
 
-const count = new ReactiveValue(1);
-const doubled = createComputed(count)
-  .as((v) => v * 2)
-  .for({ [Symbol.dispose]() {} });
+class TestVM extends ViewModel {
+  count = new ReactiveValue(1);
+  doubled = createComputed(this.count)
+    .as((v) => v * 2)
+    .for(this);
+}
 
-const value = useReactiveValue(doubled);
+const vm = useViewModel(() => new TestVM());
+const value = useReactiveValue(() => vm.doubled);
 console.log(value()); // 2
 ```
 

@@ -29,17 +29,20 @@ function useReactiveValue<T>(reactiveValue: StatePort<T>): T;
 **Example:**
 
 ```tsx
-import { useReactiveValue } from '@xndrjs/adapter-react';
-import { ReactiveValue, createComputed } from '@xndrjs/core';
+import { useReactiveValue, useViewModel } from '@xndrjs/adapter-react';
+import { ReactiveValue, createComputed, ViewModel } from '@xndrjs/core';
+
+class CounterVM extends ViewModel {
+  count = new ReactiveValue(0);
+  doubled = createComputed(this.count)
+    .as((c) => c * 2)
+    .for(this);
+}
 
 function Counter() {
-  const count = new ReactiveValue(0);
-  const doubled = createComputed(count)
-    .as((c) => c * 2)
-    .for({ [Symbol.dispose]() {} });
-  
-  const countValue = useReactiveValue(count); // number
-  const doubledValue = useReactiveValue(doubled); // number
+  const vm = useViewModel(() => new CounterVM());
+  const countValue = useReactiveValue(vm.count); // number
+  const doubledValue = useReactiveValue(vm.doubled); // number
   
   return (
     <div>
@@ -82,17 +85,24 @@ function useStatePort<T>(
 
 ```tsx
 import { useState } from 'react';
-import { useStatePort } from '@xndrjs/adapter-react';
-import { createComputed } from '@xndrjs/core';
+import { useStatePort, useViewModel } from '@xndrjs/adapter-react';
+import { createComputed, ViewModel } from '@xndrjs/core';
+
+class TodoAppVM extends ViewModel {
+  todoCount: ComputedValue<number>;
+  
+  constructor(todosPort: StatePort<Todo[]>) {
+    super();
+    this.todoCount = createComputed(todosPort)
+      .as((todos) => todos.length)
+      .for(this);
+  }
+}
 
 function TodoApp() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const todosPort = useStatePort(todos, setTodos);
-  
-  // Use the port with computed values or other StatePort operations
-  const todoCount = createComputed(todosPort)
-    .as((todos) => todos.length)
-    .for({ [Symbol.dispose]() {} });
+  const vm = useViewModel(() => new TodoAppVM(todosPort));
   
   return <div>{/* ... */}</div>;
 }
@@ -125,16 +135,24 @@ function useCreateStatePort<T>(initialValue: T): StatePort<T>;
 **Example:**
 
 ```tsx
-import { useCreateStatePort, useReactiveValue } from '@xndrjs/adapter-react';
-import { createComputed } from '@xndrjs/core';
+import { useCreateStatePort, useReactiveValue, useViewModel } from '@xndrjs/adapter-react';
+import { createComputed, ViewModel } from '@xndrjs/core';
+
+class TodoAppVM extends ViewModel {
+  todoCount: ComputedValue<number>;
+  
+  constructor(todosPort: StatePort<Todo[]>) {
+    super();
+    this.todoCount = createComputed(todosPort)
+      .as((todos) => todos.length)
+      .for(this);
+  }
+}
 
 function TodoApp() {
   const todosPort = useCreateStatePort<Todo[]>([]);
   const todos = useReactiveValue(todosPort);
-  
-  const todoCount = createComputed(todosPort)
-    .as((todos) => todos.length)
-    .for({ [Symbol.dispose]() {} });
+  const vm = useViewModel(() => new TodoAppVM(todosPort));
   
   const addTodo = (todo: Todo) => {
     todosPort.set((prev) => [...prev, todo]);
@@ -194,49 +212,13 @@ function Stopwatch() {
 }
 ```
 
-## useStableReference
-
-Get a stable reference to a value. Returns the same reference across re-renders if the value hasn't changed.
-
-### Function Signature
-
-```typescript
-function useStableReference<T>(value: T): T;
-```
-
-**Type Parameters:**
-- `T` - The type of the value
-
-**Parameters:**
-- `value: T` - The value to create a stable reference for
-
-**Returns:** A stable reference to the value (same reference if value hasn't changed)
-
-**Behavior:**
-- Returns the same reference across re-renders if the value is equal (using `Object.is`)
-- Useful for preventing unnecessary re-renders in child components
-- Useful for `useMemo`/`useCallback` dependencies
-
-**Example:**
-
-```tsx
-import { useStableReference } from '@xndrjs/adapter-react';
-
-function Parent({ config }) {
-  const stableConfig = useStableReference(config);
-  
-  // Child won't re-render if config object reference changed but values are the same
-  return <Child config={stableConfig} />;
-}
-```
-
 ## Type Exports
 
 All React adapter types are exported for TypeScript usage:
 
 ```typescript
 // All hooks are exported with their types
-export { useReactiveValue, useStatePort, useCreateStatePort, useFSM, useStableReference };
+export { useReactiveValue, useStatePort, useCreateStatePort, useFSM, useViewModel };
 ```
 
 ## Next Steps

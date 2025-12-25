@@ -81,12 +81,21 @@ function toStatePort<T>(
   const textPort = toStatePort(() => text, (v) => text = v);
 
   // Use the port with xndr APIs
-  const textLength = createComputed(textPort)
-    .as((t) => t.length)
-    .for({ [Symbol.dispose]() {} });
+  class TextLengthVM extends ViewModel {
+    textLength: ComputedValue<number>;
+    
+    constructor(textPort: StatePort<string>) {
+      super();
+      this.textLength = createComputed(textPort)
+        .as((t) => t.length)
+        .for(this);
+    }
+  }
+  
+  const textLengthVM = useViewModel(() => new TextLengthVM(textPort));
 </script>
 
 <input bind:value={text} />
-<p>Length: {textLength.get()}</p>
+<p>Length: {textLengthVM.textLength.get()}</p>
 ```
 

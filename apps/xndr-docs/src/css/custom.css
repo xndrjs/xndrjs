@@ -7,10 +7,10 @@
  * - Minimalist brutal design
  */
 
-/* Smooth scrolling and animations */
-html {
+/* Smooth scrolling - removed to prevent Chrome glitches during fast scroll */
+/* html {
   scroll-behavior: smooth;
-}
+} */
 
 /* Apply transition timing only to specific elements, not globally to avoid interfering with Docusaurus animations */
 .theme-doc-markdown *,
@@ -104,8 +104,9 @@ h1, h2, h3, h4, h5, h6 {
 /* Navbar Styles - dxbox-docs style */
 .navbar {
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* Reduced backdrop-filter blur to prevent Chrome performance issues */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   position: sticky;
@@ -153,6 +154,9 @@ h1, h2, h3, h4, h5, h6 {
 /* Dark mode navbar */
 [data-theme='dark'] .navbar {
   background: rgba(30, 30, 30, 0.95);
+  /* Reduced backdrop-filter blur to prevent Chrome performance issues */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
@@ -199,6 +203,28 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   body {
+    overflow-x: hidden;
+  }
+}
+
+/* Ensure mobile menu is completely hidden on desktop */
+@media (min-width: 997px) {
+  /* Hide custom mobile menu components on desktop */
+  [class*="mobileMenu"],
+  [class*="mobile-menu"] {
+    display: none !important;
+  }
+  
+  /* Prevent horizontal scroll on desktop */
+  body {
+    overflow-x: hidden;
+  }
+  
+  html {
+    overflow-x: hidden;
+  }
+  
+  .main-wrapper {
     overflow-x: hidden;
   }
   
@@ -262,7 +288,7 @@ h1, h2, h3, h4, h5, h6 {
 .footer__link-item a,
 .footer a.footer__link-item {
   color: rgba(255, 255, 255, 0.85) !important;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
   font-size: 0.95rem;
   text-decoration: none !important;
 }
@@ -350,7 +376,7 @@ a.button--primary {
   color: #000000;
   border: none;
   box-shadow: none;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
   font-weight: 500;
   border-radius: 6px;
 }
@@ -367,7 +393,7 @@ a.button--secondary {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.8);
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   border-radius: 6px;
 }
 
@@ -414,14 +440,14 @@ a.button--secondary:hover {
   background: var(--xndr-bg-card);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
 }
 
 .card:hover {
   border-color: rgba(0, 217, 255, 0.3);
   box-shadow: 0 8px 25px rgba(0, 217, 255, 0.1);
-  transform: translateY(-4px);
+  /* Removed transform to prevent Chrome glitches during scroll */
 }
 
 /* Code blocks improvements */
@@ -436,7 +462,7 @@ code {
   padding: 2px 6px;
   background: rgba(40, 40, 40, 0.6);
   border: 1px solid rgba(107, 31, 46, 0.2);
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 code:hover {
@@ -500,13 +526,13 @@ code:hover {
 .table-of-contents__link {
   font-size: 1rem;
   line-height: 1.6;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
   color: rgba(255, 255, 255, 0.7);
 }
 
 .table-of-contents__link:hover {
   color: var(--xndr-primary-text);
-  padding-left: 4px;
+  /* Removed padding-left to prevent layout shift during scroll */
 }
 
 .table-of-contents__link--active {
@@ -525,7 +551,7 @@ code:hover {
 .theme-doc-sidebar-container .menu__link {
   font-size: 1.125rem;
   line-height: 1.6;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -543,7 +569,7 @@ code:hover {
 }
 
 .theme-doc-sidebar-item-link {
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
   border-radius: 0;
   margin: 0;
   color: rgba(255, 255, 255, 0.7);
@@ -697,18 +723,18 @@ code:hover {
 .admonition {
   border-radius: 8px;
   border-left-width: 4px;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease;
 }
 
 .admonition:hover {
-  transform: translateX(4px);
+  /* Removed transform to prevent Chrome glitches during scroll */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Search improvements */
 .DocSearch-Button {
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .DocSearch-Button:hover {

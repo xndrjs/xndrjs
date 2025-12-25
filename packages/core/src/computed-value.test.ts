@@ -1,15 +1,29 @@
-import { describe, expect, it, vi } from "vitest";
-import type { Disposable } from "./disposable";
+import { describe, expect, it, vi, afterEach } from "vitest";
 import { createComputed } from "./create-computed";
 import type { StatePort } from "./state-port";
 import { SubscriptionsRegistry } from "./subscriptions-registry";
 import { ReactiveValue } from "./reactive-value";
+import { ViewModel } from "./view-model";
+
+class TestViewModel extends ViewModel {}
 
 describe("ComputedValue", () => {
+  const owners: ViewModel[] = [];
+
+  afterEach(() => {
+    // Cleanup all ViewModels created during tests
+    owners.forEach((owner) => {
+      if (!owner.disposed) {
+        owner[Symbol.dispose]();
+      }
+    });
+    owners.length = 0;
+  });
   it("memoizes results until dependencies change", () => {
     const dep = new ReactiveValue(1);
     const compute = vi.fn((value: number) => value * 2);
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
 
     const computed = createComputed(dep).as(compute).for(owner);
 
@@ -29,7 +43,8 @@ describe("ComputedValue", () => {
 
   it("notifies subscribers when dependencies change", async () => {
     const dep = new ReactiveValue(1);
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
     const computed = createComputed(dep)
       .as((value) => value * 3)
       .for(owner);
@@ -54,7 +69,8 @@ describe("ComputedValue", () => {
 
   it("exposes dependencies and enforces read-only semantics", () => {
     const dep = new ReactiveValue(5);
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
 
     const computed = createComputed(dep)
       .as((value) => value + 1)
@@ -74,7 +90,8 @@ describe("ComputedValue", () => {
       set: () => {},
       subscribe,
     };
-    const owner: Disposable = { [Symbol.dispose]: vi.fn() };
+    const owner = new TestViewModel();
+    owners.push(owner);
 
     const registerSpy = vi.spyOn(SubscriptionsRegistry, "register");
 

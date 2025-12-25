@@ -15,17 +15,20 @@ Svelte adapter for reactive types from `@xndrjs/core`.
 
 ```html
 <script>
-  import { reactiveValue } from "@xndrjs/adapter-svelte";
-  import { ReactiveValue, createComputed } from "@xndrjs/core";
+  import { reactiveValue, useViewModel } from "@xndrjs/adapter-svelte";
+  import { ReactiveValue, createComputed, ViewModel } from "@xndrjs/core";
 
   // For static ports
-  const count = new ReactiveValue(1);
-  const countStore = reactiveValue(() => count);
+  class CounterVM extends ViewModel {
+    count = new ReactiveValue(1);
+    doubled = createComputed(this.count)
+      .as((v) => v * 2)
+      .for(this);
+  }
 
-  const doubled = createComputed(count)
-    .as((v) => v * 2)
-    .for({ [Symbol.dispose]() {} });
-  const doubledStore = reactiveValue(() => doubled);
+  const vm = useViewModel(() => new CounterVM());
+  const countStore = reactiveValue(() => vm.count);
+  const doubledStore = reactiveValue(() => vm.doubled);
 
   // For reactive props (no $derived needed!)
   let { todoListManager } = $props();

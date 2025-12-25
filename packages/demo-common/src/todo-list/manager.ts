@@ -1,4 +1,4 @@
-import { ReactiveArray, ReactiveValue, type StatePort } from "@xndrjs/core";
+import { ReactiveArray, ReactiveValue, type StatePort, ViewModel } from "@xndrjs/core";
 import { MementoBaseCaretaker } from "@xndrjs/memento";
 import type { MementoBaseOriginator } from "@xndrjs/memento";
 import type { EventBusInterface } from "@xndrjs/cqrs";
@@ -64,7 +64,7 @@ export class TodoListOriginator implements MementoBaseOriginator<TodoListState> 
  * Receives StatePort instances from framework (React, Solid, etc.).
  * Publishes events to EventBus when todos are modified.
  */
-export class TodoListManager {
+export class TodoListManager extends ViewModel {
   private _originator: TodoListOriginator;
   private _caretaker: MementoBaseCaretaker<
     TodoListState, // TMemento
@@ -82,6 +82,7 @@ export class TodoListManager {
       historyPointerPort?: StatePort<number>;
     },
   ) {
+    super();
     const initialTodos = options?.initialTodos ?? [];
     this._todosPort =
       options?.todosPort ?? new ReactiveArray<Todo>(initialTodos);

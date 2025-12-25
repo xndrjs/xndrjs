@@ -1,7 +1,7 @@
 import {
   useCreateStatePort,
   useReactiveValue,
-  useStableReference,
+  useViewModel,
   useFSM,
 } from "@xndrjs/adapter-react";
 import { StopwatchFSM } from "@xndrjs/demo-common";
@@ -19,7 +19,7 @@ export function StopwatchFSMConnector() {
   );
 
   // Create StopwatchFSM once - ports are stable so manager doesn't need to be recreated
-  const stopwatchFSM = useStableReference(
+  const stopwatchFSM = useViewModel(
     () =>
       new StopwatchFSM(
         stopwatchCurrentStatePort,

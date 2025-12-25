@@ -103,8 +103,7 @@ The `.for()` method requires a `Disposable` owner for cleanup:
 **Returns:** `ComputedValue<T>` instance
 
 **Common Owners:**
-- `DisposableResource` classes (using `this`)
-- Objects created with `makeDisposableObject`
+- `ViewModel` classes (using `this`)
 - Custom objects implementing `Disposable`
 
 ## Methods
@@ -255,9 +254,9 @@ a.set(15);
 ### Simple Sum
 
 ```typescript
-import { ReactiveValue, createComputed, DisposableResource } from '@xndrjs/core';
+import { ReactiveValue, createComputed, ViewModel } from '@xndrjs/core';
 
-class Calculator extends DisposableResource {
+class Calculator extends ViewModel {
   private a = new ReactiveValue(2);
   private b = new ReactiveValue(3);
   
