@@ -33,7 +33,7 @@ The monorepo is organized into packages (libraries) and apps (applications):
 ```mermaid
 %%{init: {'theme':'dark'}}%%
 graph TB
-    subgraph packages["Packages - Published Libraries"]
+    subgraph packages["Packages"]
         core["@xndrjs/core"]
         adapterReact["@xndrjs/adapter-react"]
         adapterSolid["@xndrjs/adapter-solid"]
@@ -46,7 +46,7 @@ graph TB
         configTs["@xndrjs/config-typescript"]
     end
     
-    subgraph apps["Apps - Applications"]
+    subgraph apps["Apps"]
         demoReact["demo-react"]
         demoSolid["demo-solid"]
         demoSvelte["demo-svelte"]
