@@ -202,6 +202,11 @@
 
   .featuresSection {
     padding: 1.5rem 0;
+    background: transparent !important;
+  }
+
+  [data-theme='dark'] .featuresSection {
+    background: transparent !important;
   }
 
   .featuresTitle {

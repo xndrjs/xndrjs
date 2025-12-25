@@ -41,8 +41,6 @@ function findFirstDocLink(sidebarItems: any[]): string | null {
 }
 
 export default function MobileMenu({ isOpen: externalIsOpen, setIsOpen: externalSetIsOpen }: MobileMenuProps = {}) {
-  console.log('🚀 MobileMenu component is rendering!');
-  
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
   const setIsOpen = externalSetIsOpen || setInternalIsOpen;
@@ -65,9 +63,6 @@ export default function MobileMenu({ isOpen: externalIsOpen, setIsOpen: external
     });
     return links;
   }, [navbarItems]);
-  
-  console.log('📋 navbarItems:', navbarItems);
-  console.log('🔗 docLinks:', docLinks);
 
   // Close menu when route changes
   useEffect(() => {
@@ -90,11 +85,6 @@ export default function MobileMenu({ isOpen: externalIsOpen, setIsOpen: external
     setIsOpen(!isOpen);
   };
 
-  // Debug: log when component renders
-  useEffect(() => {
-    console.log('MobileMenu rendered, isOpen:', isOpen, 'navbarItems:', navbarItems);
-  }, [isOpen, navbarItems]);
-
   return (
     <>
       {/* Hamburger Button */}
@@ -103,12 +93,7 @@ export default function MobileMenu({ isOpen: externalIsOpen, setIsOpen: external
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          console.log('Hamburger clicked, current isOpen:', isOpen);
-          setIsOpen(prev => {
-            const newState = !prev;
-            console.log('Setting isOpen to:', newState);
-            return newState;
-          });
+          toggleMenu();
         }}
         aria-label="Toggle mobile menu"
         aria-expanded={isOpen}
@@ -151,6 +136,11 @@ export default function MobileMenu({ isOpen: externalIsOpen, setIsOpen: external
 
         <div className={styles.mobileMenuContent}>
           <ul className={styles.mobileMenuList}>
+            <li className={styles.mobileMenuItem}>
+              <Link to="/"  className={styles.mobileMenuLink} onClick={toggleMenu}>
+                Home
+              </Link>
+            </li>
             {navbarItems.map((item, index) => {
               if (item.type === 'docSidebar') {
                 // For docSidebar, link to the first doc in the sidebar dynamically

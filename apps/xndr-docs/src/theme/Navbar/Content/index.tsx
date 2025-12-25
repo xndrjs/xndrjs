@@ -18,7 +18,6 @@ export default function ContentWrapper(props: Props): ReactNode {
           if (window.innerWidth <= 996) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('🖱️ Logo clicked, toggling menu');
             setIsMenuOpen(prev => !prev);
           }
         };
