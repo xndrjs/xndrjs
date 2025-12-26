@@ -39,8 +39,8 @@ function reactiveValue<T>(getPort: () => StatePort<T>): Writable<T>;
   const countStore = reactiveValue(() => count);
 
   // For reactive props (no $derived needed!)
-  let { todoListManager } = $props();
-  const todosStore = reactiveValue(() => todoListManager.todos);
+  let { todoListService } = $props();
+  const todosStore = reactiveValue(() => todoListService.todos);
 </script>
 
 <div>{$countStore}</div>

@@ -1,4 +1,4 @@
-import { type StatePort, ViewModel } from "@xndrjs/core";
+import { type StatePort, type Disposable } from "@xndrjs/core";
 import type {
   ExtractConfigFromContext,
   FSMContext,
@@ -10,6 +10,9 @@ import { CONFIG_TYPE } from "./types";
 /**
  * Base implementation of a Finite State Machine context manager.
  * Uses StatePort for framework-agnostic state management of the current machine state.
+ *
+ * This is a manager class and should receive a Disposable owner via dependency injection,
+ * not extend ViewModel. The owner is responsible for cleanup of subscriptions.
  *
  * @template TConfig - The generic FSM config type
  * @template TSelf - The concrete context manager type (must be specified when extending)
@@ -23,10 +26,7 @@ export class FSMContextManager<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     any
   >,
->
-  extends ViewModel
-  implements FSMContext<TConfig>
-{
+> implements FSMContext<TConfig> {
   /**
    * Symbol property for type inference only.
    * Used by ExtractConfigFromContext type helper to infer TConfig.
@@ -36,6 +36,15 @@ export class FSMContextManager<
 
   private _currentState: StatePort<FSMContextState<TSelf>>;
   private _hasCalledInitialize: boolean;
+  protected readonly _owner: Disposable;
+
+  /**
+   * Get the Disposable owner responsible for cleanup of subscriptions.
+   * States can use this to register resources (e.g., intervals, timeouts) for automatic cleanup.
+   */
+  get owner(): Disposable {
+    return this._owner;
+  }
 
   /**
    * Get the current machine state as a StatePort.
@@ -48,10 +57,14 @@ export class FSMContextManager<
   /**
    * Create a new FSM context manager.
    *
+   * @param owner - The Disposable owner responsible for cleanup of subscriptions
    * @param currentStatePort - StatePort for the current machine state
    */
-  constructor(currentStatePort: StatePort<FSMContextState<TSelf>>) {
-    super();
+  constructor(
+    owner: Disposable,
+    currentStatePort: StatePort<FSMContextState<TSelf>>,
+  ) {
+    this._owner = owner;
     this._currentState = currentStatePort;
     this._hasCalledInitialize = false;
   }
@@ -78,15 +91,6 @@ export class FSMContextManager<
     if (!this._hasCalledInitialize) {
       throw new Error("FSMContextManager must call initialize()");
     }
-  }
-
-  /**
-   * Cleanup method that delegates to the parent class cleanup.
-   * Classes extending FSMContextManager can call super._cleanup()
-   * when overriding [Symbol.dispose]().
-   */
-  protected _cleanup(): void {
-    super._cleanup();
   }
 
   /**

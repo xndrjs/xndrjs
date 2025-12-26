@@ -1,4 +1,5 @@
 import type { FSMState, FSMStateConfig } from "@xndrjs/fsm";
+import { createInterval } from "@xndrjs/core";
 import type { StopwatchFSM } from "../fsm";
 import { IdleState } from "./idle-state";
 import { PausedState } from "./paused-state";
@@ -13,9 +14,14 @@ export class PlayingState implements FSMState<StopwatchFSM, "playing"> {
 
   async onEnter(context: StopwatchFSM): Promise<void> {
     // Start auto-incrementing every second (increment timeIntPort by 1)
-    const intervalId = setInterval(() => {
-      context.timeIntPort.set((prev: number) => prev + 1);
-    }, 1000);
+    // createInterval automatically registers cleanup with the owner
+    const intervalId = createInterval(
+      context.owner,
+      () => {
+        context.timeIntPort.set((prev: number) => prev + 1);
+      },
+      1000,
+    );
     context._setIntervalId(intervalId);
   }
 

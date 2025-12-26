@@ -1,20 +1,22 @@
 import { ReactiveValue } from "@xndrjs/core";
-import { TodoListManager, NewTodoItemForm } from "@xndrjs/demo-common";
-import { useReactiveValue } from "@xndrjs/adapter-solid";
+import { TodoListService, NewTodoItemForm } from "@xndrjs/demo-common";
+import { useReactiveValue, useViewModel } from "@xndrjs/adapter-solid";
 import { TodoListView } from "./todo-list.view";
 import { NewTodoItemFormView } from "./new-todo-item-form.view";
 
 interface TodoListConnectorProps {
-  todoListManager: TodoListManager;
+  todoListService: TodoListService;
 }
 
-export function TodoListConnector({ todoListManager }: TodoListConnectorProps) {
+export function TodoListConnector({ todoListService }: TodoListConnectorProps) {
   const newTodoTextPort = new ReactiveValue<string>("");
-  const newTodoItemForm = new NewTodoItemForm(newTodoTextPort, todoListManager);
+  const newTodoItemForm = useViewModel(
+    () => new NewTodoItemForm(newTodoTextPort, todoListService),
+  );
 
-  const todos = useReactiveValue(todoListManager.todos);
-  const canUndo = useReactiveValue(todoListManager.canUndo);
-  const canRedo = useReactiveValue(todoListManager.canRedo);
+  const todos = useReactiveValue(todoListService.todos);
+  const canUndo = useReactiveValue(todoListService.canUndo);
+  const canRedo = useReactiveValue(todoListService.canRedo);
   const newTodoText = useReactiveValue(newTodoTextPort);
 
   return (
@@ -28,14 +30,14 @@ export function TodoListConnector({ todoListManager }: TodoListConnectorProps) {
       />
       <TodoListView
         todos={todos}
-        onToggle={(id) => todoListManager.toggleTodo(id)}
-        onDelete={(id) => todoListManager.removeTodo(id)}
+        onToggle={(id) => todoListService.toggleTodo(id)}
+        onDelete={(id) => todoListService.removeTodo(id)}
       />
       <div class="todo-actions">
-        <button onClick={() => todoListManager.undo()} disabled={!canUndo()}>
+        <button onClick={() => todoListService.undo()} disabled={!canUndo()}>
           Undo
         </button>
-        <button onClick={() => todoListManager.redo()} disabled={!canRedo()}>
+        <button onClick={() => todoListService.redo()} disabled={!canRedo()}>
           Redo
         </button>
       </div>

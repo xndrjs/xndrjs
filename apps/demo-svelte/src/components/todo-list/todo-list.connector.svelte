@@ -1,25 +1,25 @@
 <script lang="ts">
-  import { TodoListManager, NewTodoItemForm } from "@xndrjs/demo-common";
-  import { reactiveValue, toStatePort } from "@xndrjs/adapter-svelte";
+  import { TodoListService, NewTodoItemForm } from "@xndrjs/demo-common";
+  import { reactiveValue, toStatePort, useViewModel } from "@xndrjs/adapter-svelte";
   import NewTodoItemFormView from "./new-todo-item-form.view.svelte";
   import TodoListView from "./todo-list.view.svelte";
 
   interface Props {
-    todoListManager: TodoListManager;
+    todoListService: TodoListService;
   }
 
-  let { todoListManager }: Props = $props();
+  let { todoListService }: Props = $props();
 
   // example: using a Svelte Rune as state
   let newTodoTextStore = $state("");
   // converting the Rune as State Port to be used inside a Xandr class
   const newTodoTextPort = toStatePort(() => newTodoTextStore, (v) => newTodoTextStore = v);
   // passing the State Port to the Xandr class
-  const newTodoItemForm = $derived(new NewTodoItemForm(newTodoTextPort, todoListManager));
+  const newTodoItemForm = useViewModel(() => new NewTodoItemForm(newTodoTextPort, todoListService));
   // using reactive values from the Xandr class
-  const todosStore = reactiveValue(() => todoListManager.todos);
-  const canUndoStore = reactiveValue(() => todoListManager.canUndo);
-  const canRedoStore = reactiveValue(() => todoListManager.canRedo);
+  const todosStore = reactiveValue(() => todoListService.todos);
+  const canUndoStore = reactiveValue(() => todoListService.canUndo);
+  const canRedoStore = reactiveValue(() => todoListService.canRedo);
 </script>
 
 <div class="demo-section">
@@ -32,14 +32,14 @@
   />
   <TodoListView
     todos={$todosStore}
-    onToggle={(id) => todoListManager.toggleTodo(id)}
-    onDelete={(id) => todoListManager.removeTodo(id)}
+    onToggle={(id) => todoListService.toggleTodo(id)}
+    onDelete={(id) => todoListService.removeTodo(id)}
   />
   <div class="todo-actions">
-    <button onclick={() => todoListManager.undo()} disabled={!$canUndoStore}>
+    <button onclick={() => todoListService.undo()} disabled={!$canUndoStore}>
       Undo
     </button>
-    <button onclick={() => todoListManager.redo()} disabled={!$canRedoStore}>
+    <button onclick={() => todoListService.redo()} disabled={!$canRedoStore}>
       Redo
     </button>
   </div>

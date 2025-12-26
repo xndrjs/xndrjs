@@ -3,7 +3,7 @@ import { createEventBusHandlers } from "@xndrjs/cqrs";
 import type { Disposable } from "@xndrjs/core";
 import type { EventBusInterface } from "@xndrjs/cqrs";
 import { DomainEvent } from "@xndrjs/cqrs";
-import type { Todo } from "./manager";
+import type { Todo } from "./service";
 import type {
   StopwatchPlayEvent,
   StopwatchPauseEvent,

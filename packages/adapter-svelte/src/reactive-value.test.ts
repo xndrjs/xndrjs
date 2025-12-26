@@ -1,9 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import {
-  ReactiveValue,
-  createComputed,
-  ViewModel,
-} from "@xndrjs/core";
+import { ReactiveValue, createComputed, ViewModel } from "@xndrjs/core";
 import { reactiveValue } from "./reactive-value.svelte";
 
 class TestViewModel extends ViewModel {}

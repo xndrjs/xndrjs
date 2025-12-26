@@ -120,7 +120,7 @@ Here's a complete example showing how to create framework-agnostic business logi
 ```typescript
 import { ReactiveValue, createComputed, ViewModel } from '@xndrjs/core';
 
-export class CounterManager extends ViewModel {
+export class CounterService extends ViewModel {
   public count = new ReactiveValue(0);
   
   public doubled = createComputed(this.count)
@@ -141,25 +141,25 @@ export class CounterManager extends ViewModel {
 
 ```tsx
 import { useReactiveValue, useViewModel } from '@xndrjs/adapter-react';
-import { CounterManager } from './counter-manager';
+import { CounterService } from './counter-service';
 
 function Counter() {
-  const manager = useViewModel(() => new CounterManager());
-  const count = useReactiveValue(manager.count);
-  const doubled = useReactiveValue(manager.doubled);
+  const service = useViewModel(() => new CounterService());
+  const count = useReactiveValue(service.count);
+  const doubled = useReactiveValue(service.doubled);
 
   return (
     <div>
       <div>Count: {count}</div>
       <div>Doubled: {doubled}</div>
-      <button onClick={() => manager.increment()}>+</button>
-      <button onClick={() => manager.decrement()}>-</button>
+      <button onClick={() => service.increment()}>+</button>
+      <button onClick={() => service.decrement()}>-</button>
     </div>
   );
 }
 ```
 
-The same `CounterManager` class can be used with Solid or Svelte using their respective adapters - no changes to the business logic required!
+The same `CounterService` class can be used with Solid or Svelte using their respective adapters - no changes to the business logic required!
 
 ## Project Structure
 

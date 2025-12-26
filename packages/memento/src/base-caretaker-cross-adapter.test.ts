@@ -1,8 +1,10 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { ReactiveValue, ReactiveArray } from "@xndrjs/core";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { ReactiveValue, ReactiveArray, ViewModel } from "@xndrjs/core";
 import type { StatePort } from "@xndrjs/core";
 import { MementoBaseCaretaker } from "./base-caretaker";
 import type { MementoBaseOriginator } from "./types";
+
+class TestViewModel extends ViewModel {}
 
 // Simple originator for testing
 class TestOriginator implements MementoBaseOriginator<number> {
@@ -35,8 +37,10 @@ describe("MementoBaseCaretaker - Cross Adapter", () => {
     let caretaker: MementoBaseCaretaker<number, TestOriginator>;
     let historyPort: StatePort<number[]>;
     let historyPointerPort: StatePort<number>;
+    let owner: TestViewModel;
 
     beforeEach(() => {
+      owner = new TestViewModel();
       originator = new TestOriginator(0);
 
       // Create StatePort directly (ReactiveValue and ReactiveArray now implement StatePort)
@@ -44,10 +48,17 @@ describe("MementoBaseCaretaker - Cross Adapter", () => {
       historyPointerPort = new ReactiveValue<number>(-1);
 
       caretaker = new MementoBaseCaretaker(
+        owner,
         originator,
         historyPort,
         historyPointerPort,
       );
+    });
+
+    afterEach(() => {
+      if (owner && !owner.disposed) {
+        owner[Symbol.dispose]();
+      }
     });
 
     it("should work with reactive adapter", () => {

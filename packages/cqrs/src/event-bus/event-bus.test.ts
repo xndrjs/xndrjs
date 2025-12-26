@@ -268,8 +268,8 @@ describe("EventBus (local only)", () => {
     const handler3: UntypedLocalEventHandler = vi.fn(async () => {});
     Object.defineProperty(handler3, "name", { value: "Handler3" });
 
-        const owner = new TestViewModel();
-        owners.push(owner);
+    const owner = new TestViewModel();
+    owners.push(owner);
     createEventBusHandlers(owner, bus)
       .on<UserCreatedEvent>("UserCreated", mockHandler1)
       .on<UserCreatedEvent>("UserCreated", mockHandler2)
@@ -287,7 +287,7 @@ describe("EventBus (local only)", () => {
     const handler3: UntypedLocalEventHandler = vi.fn(async () => {});
     Object.defineProperty(handler3, "name", { value: "Handler3" });
 
-        const owner = new TestViewModel();
+    const owner = new TestViewModel();
     createEventBusHandlers(owner, bus)
       .on<UserCreatedEvent>("UserCreated", mockHandler1)
       .on<UserCreatedEvent>("UserCreated", mockHandler2)
@@ -312,7 +312,7 @@ describe("EventBus (local only)", () => {
       value: "UserDeletedHandler",
     });
 
-        const owner = new TestViewModel();
+    const owner = new TestViewModel();
     createEventBusHandlers(owner, bus)
       .on<UserCreatedEvent>("UserCreated", mockHandler1)
       .on<UserDeletedEvent>("UserDeleted", userDeletedHandler)
@@ -341,7 +341,7 @@ describe("EventBus (local only)", () => {
     const handler3: UntypedLocalEventHandler = vi.fn(async () => {});
 
     // Use builder pattern for fluent API
-        const owner = new TestViewModel();
+    const owner = new TestViewModel();
     createEventBusHandlers(owner, bus)
       .on<UserCreatedEvent>("UserCreated", handler2)
       .on<UserCreatedEvent>("UserCreated", handler3)

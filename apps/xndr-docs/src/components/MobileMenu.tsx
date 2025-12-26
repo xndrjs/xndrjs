@@ -104,11 +104,6 @@ export default function MobileMenu({ isOpen, onClose, sidebarData }: MobileMenuP
         </div>
         <div className={styles.mobileMenuContent}>
           <ul className={styles.mobileMenuList}>
-            <li className={styles.mobileMenuItem}>
-              <a href="/" className={styles.mobileMenuLink} onClick={onClose}>
-                Home
-              </a>
-            </li>
             {sidebarData.map((item) => renderItem(item))}
           </ul>
         </div>

@@ -1,16 +1,16 @@
 import { useReactiveValue } from "@xndrjs/adapter-solid";
-import { TodoListManager } from "@xndrjs/demo-common";
+import { TodoListService } from "@xndrjs/demo-common";
 import { TodoHistoryView } from "./todo-history.view";
 
 interface TodoHistoryConnectorProps {
-  todoListManager: TodoListManager;
+  todoListService: TodoListService;
 }
 
 export function TodoHistoryConnector({
-  todoListManager,
+  todoListService,
 }: TodoHistoryConnectorProps) {
-  const history = useReactiveValue(todoListManager.history);
-  const historyPointer = useReactiveValue(todoListManager.historyPointer);
+  const history = useReactiveValue(todoListService.history);
+  const historyPointer = useReactiveValue(todoListService.historyPointer);
 
   return (
     <div class="demo-section">

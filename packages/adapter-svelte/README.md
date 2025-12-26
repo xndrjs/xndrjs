@@ -31,8 +31,8 @@ Svelte adapter for reactive types from `@xndrjs/core`.
   const doubledStore = reactiveValue(() => vm.doubled);
 
   // For reactive props (no $derived needed!)
-  let { todoListManager } = $props();
-  const todosStore = reactiveValue(() => todoListManager.todos);
+  let { todoListService } = $props();
+  const todosStore = reactiveValue(() => todoListService.todos);
 
   // Convert $state to StatePort to use with APIs that require StatePort
   import { toStatePort } from "@xndrjs/adapter-svelte";

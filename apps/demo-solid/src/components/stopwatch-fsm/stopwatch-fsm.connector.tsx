@@ -1,9 +1,28 @@
 import { createMemo } from "solid-js";
-import { ReactiveObject, ReactiveValue } from "@xndrjs/core";
-import { useReactiveValue } from "@xndrjs/adapter-solid";
+import {
+  ReactiveObject,
+  ReactiveValue,
+  ViewModel,
+  type StatePort,
+} from "@xndrjs/core";
+import { useReactiveValue, useViewModel } from "@xndrjs/adapter-solid";
 import { StopwatchFSMView } from "./stopwatch-fsm.view";
 import { StopwatchFSM } from "@xndrjs/demo-common";
+import type { FSMContextState } from "@xndrjs/fsm";
 import { eventBus } from "../../messaging";
+
+class StopwatchFSMViewModel extends ViewModel {
+  readonly fsm: StopwatchFSM;
+
+  constructor(
+    currentStatePort: StatePort<FSMContextState<StopwatchFSM>>,
+    timeIntPort: StatePort<number>,
+  ) {
+    super();
+    this.fsm = new StopwatchFSM(this, currentStatePort, timeIntPort, eventBus);
+    this.fsm.initialize();
+  }
+}
 
 export function StopwatchFSMConnector() {
   const stopwatchCurrentStatePort = new ReactiveObject(
@@ -13,13 +32,14 @@ export function StopwatchFSMConnector() {
     StopwatchFSM.defaults.timeIntPort,
   );
 
-  const stopwatchFSM = new StopwatchFSM(
-    stopwatchCurrentStatePort,
-    stopwatchTimeIntPort,
-    eventBus,
+  const vm = useViewModel(
+    () =>
+      new StopwatchFSMViewModel(
+        stopwatchCurrentStatePort,
+        stopwatchTimeIntPort,
+      ),
   );
-
-  stopwatchFSM.initialize();
+  const stopwatchFSM = vm.fsm;
 
   const currentState = useReactiveValue(stopwatchFSM.currentState);
   const time = useReactiveValue(stopwatchFSM.timePort);

@@ -1,8 +1,10 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { ReactiveValue, ReactiveArray } from "@xndrjs/core";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { ReactiveValue, ReactiveArray, ViewModel } from "@xndrjs/core";
 import type { StatePort } from "@xndrjs/core";
 import { MementoDiffCaretaker } from "./diff-caretaker";
 import type { MementoDiffOriginator } from "./types";
+
+class TestViewModel extends ViewModel {}
 
 // Simple diff originator: state = number, memento = delta
 class TestDiffOriginator implements MementoDiffOriginator<number, number> {
@@ -39,8 +41,10 @@ describe("MementoDiffCaretaker (StatePort)", () => {
   let caretaker: MementoDiffCaretaker<number, TestDiffOriginator, number>;
   let historyPort: StatePort<number[]>;
   let historyPointerPort: StatePort<number>;
+  let owner: TestViewModel;
 
   beforeEach(() => {
+    owner = new TestViewModel();
     originator = new TestDiffOriginator(0);
 
     // Create StatePort directly (ReactiveValue and ReactiveArray now implement StatePort)
@@ -48,10 +52,17 @@ describe("MementoDiffCaretaker (StatePort)", () => {
     historyPointerPort = new ReactiveValue<number>(-1);
 
     caretaker = new MementoDiffCaretaker(
+      owner,
       originator,
       historyPort,
       historyPointerPort,
     );
+  });
+
+  afterEach(() => {
+    if (owner && !owner.disposed) {
+      owner[Symbol.dispose]();
+    }
   });
 
   it("initializes with initial state", () => {

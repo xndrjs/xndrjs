@@ -61,10 +61,9 @@ const sidebarData = await getSidebarData();
             </svg>
           </a>
         </div>
+        <MobileMenuWrapper client:load sidebarData={sidebarData} />
       </div>
     </nav>
-    
-    <MobileMenuWrapper client:load sidebarData={sidebarData} />
 
     <main>
       <slot />

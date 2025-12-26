@@ -24,7 +24,7 @@ This demo application demonstrates how framework-agnostic business logic can be 
 The application follows a connector/presentational component pattern:
 
 - **Connector Components**: Manage state, create StatePort instances, instantiate framework-agnostic classes, and pass reactive props to UI components
-  - `TodoListConnector`: Manages todo state and `TodoListManager`
+  - `TodoListConnector`: Manages todo state and `TodoListService`
   - `StopwatchFSMConnector`: Manages stopwatch state and `StopwatchFSM`
   - `EventLogConnector`: Manages event log state, `EventBus`, and `TodoEventHandlers`
 
@@ -34,7 +34,7 @@ The application follows a connector/presentational component pattern:
   - `EventLog`: UI for event log
 
 - **Framework-Agnostic Classes** (from `@xndrjs/demo-common`):
-  - `TodoListManager`: Memento pattern implementation
+  - `TodoListService`: Memento pattern implementation
   - `StopwatchFSM`: FSM pattern implementation with auto-increment
   - `TodoEventHandlers`: Event handling with EventHandlerBuilder
 

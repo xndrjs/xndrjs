@@ -1,5 +1,5 @@
 import { ReactiveArray } from "@xndrjs/core";
-import { Todo, TodoListManager } from "@xndrjs/demo-common";
+import { Todo, TodoListService } from "@xndrjs/demo-common";
 import { eventBus } from "./messaging";
 import { TodoListConnector } from "./components/todo-list/todo-list.connector";
 import { TodoHistoryConnector } from "./components/todo-list/history.connector";
@@ -8,6 +8,7 @@ import {
   EventLogConnector,
   useEventLog,
 } from "./components/event-log/event-log.connector";
+import { useViewModel } from "@xndrjs/adapter-solid";
 
 function App() {
   // Event handlers registered via hook
@@ -22,7 +23,9 @@ function App() {
     },
     { id: crypto.randomUUID(), text: "Build demo app", completed: false },
   ]);
-  const todoListManager = new TodoListManager(eventBus, { todosPort });
+  const todoListService = useViewModel(
+    () => new TodoListService(eventBus, { todosPort }),
+  );
 
   return (
     <div class="app">
@@ -32,9 +35,9 @@ function App() {
       </div>
 
       <div class="demo-grid">
-        <TodoListConnector todoListManager={todoListManager} />
+        <TodoListConnector todoListService={todoListService} />
         <StopwatchFSMConnector />
-        <TodoHistoryConnector todoListManager={todoListManager} />
+        <TodoHistoryConnector todoListService={todoListService} />
         <EventLogConnector />
       </div>
     </div>

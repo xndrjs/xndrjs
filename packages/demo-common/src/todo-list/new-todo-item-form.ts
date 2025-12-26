@@ -1,6 +1,6 @@
 import type { StatePort } from "@xndrjs/core";
 import { ViewModel } from "@xndrjs/core";
-import type { TodoListManager } from "./manager";
+import type { TodoListService } from "./service";
 
 /**
  * Manages the form state for adding a new todo item.
@@ -8,7 +8,7 @@ import type { TodoListManager } from "./manager";
  */
 export class NewTodoItemForm extends ViewModel {
   private _textPort: StatePort<string>;
-  private _todoListManager: TodoListManager;
+  private _todoListService: TodoListService;
 
   /**
    * Get the text port for the new todo input.
@@ -17,10 +17,10 @@ export class NewTodoItemForm extends ViewModel {
     return this._textPort;
   }
 
-  constructor(textPort: StatePort<string>, todoListManager: TodoListManager) {
+  constructor(textPort: StatePort<string>, todoListService: TodoListService) {
     super();
     this._textPort = textPort;
-    this._todoListManager = todoListManager;
+    this._todoListService = todoListService;
   }
 
   /**
@@ -29,7 +29,7 @@ export class NewTodoItemForm extends ViewModel {
   submit(): void {
     const text = this._textPort.get().trim();
     if (text) {
-      this._todoListManager.addTodo(text);
+      this._todoListService.addTodo(text);
       this._textPort.set("");
     }
   }

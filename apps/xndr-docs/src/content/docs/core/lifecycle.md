@@ -68,8 +68,8 @@ When a `ViewModel` is disposed:
 
 ```typescript
 class SubscriptionsRegistry {
-  add(subscription: () => void): void;
-  clear(): void;
+  static register(owner: Disposable, unsubscribe: () => void): void;
+  static cleanup(owner: Disposable): void;
 }
 ```
 
@@ -79,7 +79,6 @@ class SubscriptionsRegistry {
 import { SubscriptionsRegistry } from '@xndrjs/core';
 
 class MyViewModel extends ViewModel {
-  private subscriptions = new SubscriptionsRegistry();
   private port: StatePort<number>;
   
   constructor(port: StatePort<number>) {
@@ -91,16 +90,87 @@ class MyViewModel extends ViewModel {
       // handle change
     });
     if (unsubscribe) {
-      this.subscriptions.add(unsubscribe);
+      SubscriptionsRegistry.register(this, unsubscribe);
     }
   }
   
-  [Symbol.dispose](): void {
-    this.subscriptions.clear(); // Cleanup all subscriptions
-    super._cleanup(); // Call base class cleanup
+  // No need to override [Symbol.dispose]() - cleanup is automatic!
+}
+```
+
+## Resource Helpers
+
+xndr provides helper functions to automatically manage browser resources (intervals, timeouts, event listeners, etc.) through `SubscriptionsRegistry`. These helpers eliminate the need for explicit cleanup code.
+
+### Available Helpers
+
+- **`createInterval(owner, fn, delay)`** - Creates an interval that is automatically cleared when owner is disposed
+- **`createTimeout(owner, fn, delay)`** - Creates a timeout that is automatically cleared if owner is disposed before it fires
+- **`createEventListener(owner, target, event, handler, options?)`** - Adds an event listener that is automatically removed when owner is disposed
+- **`createAbortController(owner)`** - Creates an AbortController for cancelling fetch requests, automatically aborted on dispose
+- **`createWebSocket(owner, url, protocols?)`** - Creates a WebSocket connection that is automatically closed on dispose
+- **`createAnimationFrame(owner, callback)`** - Creates an animation frame request that is automatically cancelled on dispose
+- **`createIntersectionObserver(owner, callback, options?)`** - Creates an IntersectionObserver that is automatically disconnected on dispose
+
+### Usage Example
+
+```typescript
+import { ViewModel, createInterval, createEventListener } from '@xndrjs/core';
+
+class TimerVM extends ViewModel {
+  constructor() {
+    super();
+    
+    // Interval is automatically cleared when ViewModel is disposed
+    createInterval(this, () => {
+      console.log('Tick');
+    }, 1000);
+    
+    // Event listener is automatically removed when ViewModel is disposed
+    createEventListener(this, window, 'resize', () => {
+      console.log('Window resized');
+    });
   }
 }
 ```
+
+### Using Helpers in Services
+
+When creating services that receive an owner via dependency injection, use the owner parameter:
+
+```typescript
+import { createInterval, type Disposable } from '@xndrjs/core';
+import { FSMContextManager } from '@xndrjs/fsm';
+import type { StatePort, FSMContextState } from '@xndrjs/core';
+
+class MyFSM extends FSMContextManager<MyConfig, MyFSM> {
+  constructor(owner: Disposable, currentStatePort: StatePort<FSMContextState<MyFSM>>) {
+    super(owner, currentStatePort);
+    
+    // Use the owner for automatic cleanup
+    createInterval(owner, () => {
+      // Periodic task
+    }, 1000);
+  }
+}
+
+// In a state's onEnter method
+class PlayingState implements FSMState<MyFSM, "playing"> {
+  async onEnter(context: MyFSM): Promise<void> {
+    // Access owner via context.owner
+    createInterval(context.owner, () => {
+      context.doSomething();
+    }, 1000);
+  }
+}
+```
+
+### Benefits
+
+- **No explicit cleanup needed** - Resources are automatically cleaned up when the owner is disposed
+- **Prevents memory leaks** - All resources are tracked and cleaned up together
+- **Consistent pattern** - Same approach for all resource types
+- **Type-safe** - Full TypeScript support with proper types
 
 ## Using with Framework
 
@@ -211,11 +281,12 @@ In Svelte, use `useViewModel` hook:
 
 1. **Always dispose resources** - Prevent memory leaks by disposing ViewModels when done
 2. **Instantiate ViewModel in the View layer** - ViewModels are intended to be instantiated in the View layer, use with `useViewModel` hook
-3. **Use dependency injection for managers** - Managers should receive `Disposable` owner via constructor, not extend `ViewModel`
-4. **Register subscriptions** - Use `SubscriptionsRegistry` or computed `.for()` for cleanup
-5. **Don't dispose shared resources** - Only dispose resources you own
+3. **Use dependency injection for services** - Services should receive `Disposable` owner via constructor, not extend `ViewModel`
+4. **Use resource helpers** - Prefer `createInterval`, `createEventListener`, etc. over manual resource management
+5. **Register subscriptions** - Use `SubscriptionsRegistry` or computed `.for()` for cleanup
+6. **Don't dispose shared resources** - Only dispose resources you own
 
-## Example: ViewModel with Manager Pattern
+## Example: ViewModel with Service Pattern
 
 For simple cases, implement logic directly in ViewModel:
 
@@ -246,7 +317,7 @@ function TodoApp() {
 }
 ```
 
-For complex cases with reusable managers, use dependency injection:
+For complex cases with reusable services, use dependency injection:
 
 ```typescript
 import {
@@ -254,17 +325,20 @@ import {
   ReactiveValue,
   createComputed,
   SubscriptionsRegistry,
+  type Disposable,
+  type StatePort,
+  type ComputedValue,
 } from '@xndrjs/core';
 
-// Manager receives owner via DI
-class TodoManager {
+// Service receives owner via DI
+class TodoService {
   todos: ReactiveValue<Todo[]>;
   todoCount: ComputedValue<number>;
   
   constructor(protected owner: Disposable, externalPort: StatePort<Todo[]>) {
     this.todos = new ReactiveValue<Todo[]>([]);
     this.todoCount = createComputed(this.todos)
-    .as((todos) => todos.length)
+      .as((todos) => todos.length)
       .for(owner);
     
     // Subscribe to external port
@@ -281,18 +355,18 @@ class TodoManager {
   }
 }
 
-// ViewModel uses the manager
+// ViewModel uses the service
 class TodoVM extends ViewModel {
-  private manager: TodoManager;
+  private service: TodoService;
   
   constructor(externalPort: StatePort<Todo[]>) {
     super();
-    this.manager = new TodoManager(this, externalPort);
+    this.service = new TodoService(this, externalPort);
   }
   
-  get todos() { return this.manager.todos; }
-  get todoCount() { return this.manager.todoCount; }
-  addTodo(todo: Todo) { this.manager.addTodo(todo); }
+  get todos() { return this.service.todos; }
+  get todoCount() { return this.service.todoCount; }
+  addTodo(todo: Todo) { this.service.addTodo(todo); }
 }
 
 // Usage in component

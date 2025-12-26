@@ -43,8 +43,8 @@ function isReactiveValue<T>(value: StatePort<T>): value is ReactiveValue<T> {
  *
  * @example
  * ```tsx
- * useMonitorStatePort(todoListManager.canUndo, { name: "canUndo" });
- * useMonitorStatePort(todoListManager.todos, { name: "todos" });
+ * useMonitorStatePort(todoListService.canUndo, { name: "canUndo" });
+ * useMonitorStatePort(todoListService.todos, { name: "todos" });
  * ```
  */
 export function useMonitorStatePort<T>(

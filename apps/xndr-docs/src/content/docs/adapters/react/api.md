@@ -171,58 +171,13 @@ function TodoApp() {
 }
 ```
 
-## useFSM
-
-Automatically initialize an FSM context manager when the component mounts.
-
-### Function Signature
-
-```typescript
-function useFSM<TConfig extends Record<PropertyKey, unknown>>(
-  fsm: FSMContextManager<TConfig, any> | null | undefined,
-): void;
-```
-
-**Type Parameters:**
-- `TConfig` - The FSM configuration type
-
-**Parameters:**
-- `fsm: FSMContextManager<TConfig, any> | null | undefined` - The FSM context manager to initialize
-
-**Returns:** `void`
-
-**Behavior:**
-- Calls `fsm.initialize()` when component mounts
-- `initialize()` is idempotent, so this hook can be safely used with shared FSM instances
-- No-op if `fsm` is `null` or `undefined`
-
-**Example:**
-
-```tsx
-import { useFSM } from '@xndrjs/adapter-react';
-import { FSMContextManager } from '@xndrjs/fsm';
-import { useMemo } from 'react';
-
-function Stopwatch() {
-  const fsm = useMemo(() => new StopwatchFSM(currentStatePort), []);
-  
-  // Automatically initialize the FSM
-  useFSM(fsm);
-  
-  // Component is reactive to machine state changes
-  const currentState = useReactiveValue(fsm.currentState);
-  
-  return <div>Current state: {currentState.name}</div>;
-}
-```
-
 ## Type Exports
 
 All React adapter types are exported for TypeScript usage:
 
 ```typescript
 // All hooks are exported with their types
-export { useReactiveValue, useStatePort, useCreateStatePort, useFSM, useViewModel };
+export { useReactiveValue, useStatePort, useCreateStatePort, useViewModel };
 ```
 
 ## Next Steps

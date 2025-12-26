@@ -26,8 +26,8 @@ function App() {
 ```tsx
 import { useMonitorStatePort } from '@xndrjs/devtools-react';
 
-function MyComponent({ manager }) {
-  useMonitorStatePort(manager.count, { name: 'Count' });
+function MyComponent({ service }) {
+  useMonitorStatePort(service.count, { name: 'Count' });
   // Component logic...
 }
 ```

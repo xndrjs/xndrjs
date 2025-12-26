@@ -6,6 +6,8 @@ title: patterns → memento → Usage
 
 ## MementoBaseCaretaker
 
+`MementoBaseCaretaker` is a **service class** that should receive a `Disposable` owner via dependency injection, not implement `Disposable`. The owner is responsible for cleanup of subscriptions.
+
 ### Class Definition
 
 ```typescript
@@ -14,16 +16,18 @@ class MementoBaseCaretaker<
   Originator extends MementoBaseOriginator<TMemento>
 > {
   constructor(
+    owner: Disposable,
     originator: Originator,
-    options?: MementoAbstractCaretakerProps<TMemento, Originator>
+    history: StatePort<TMemento[]>,
+    historyPointer: StatePort<number>
   );
   
   saveState(): void;
   undo(): void;
   redo(): void;
   
-  get history(): ReactiveArray<TMemento>;
-  get historyPointer(): ReactiveValue<number>;
+  get history(): StatePort<TMemento[]>;
+  get historyPointer(): StatePort<number>;
   get canUndo(): ComputedValue<boolean>;
   get canRedo(): ComputedValue<boolean>;
 }
@@ -31,44 +35,79 @@ class MementoBaseCaretaker<
 
 ## Usage Example
 
-```typescript
-import { MementoBaseCaretaker } from '@xndrjs/memento';
-import { ReactiveValue } from '@xndrjs/core';
+### In a React Component
 
+```tsx
+import { useCreateStatePort, useViewModel } from '@xndrjs/adapter-react';
+import { ViewModel, type StatePort, type Disposable } from '@xndrjs/core';
+import { MementoBaseCaretaker } from '@xndrjs/memento';
+import type { MementoBaseOriginator } from '@xndrjs/memento';
+
+// Define your originator
 class TodoListOriginator implements MementoBaseOriginator<Todo[]> {
-  private todos = new ReactiveValue<Todo[]>([]);
+  constructor(private todosPort: StatePort<Todo[]>) {}
   
-  getMemento(): Todo[] {
-    return this.todos.get();
+  getMemento(): Todo[] | null {
+    return this.todosPort.get();
   }
   
-  setMemento(memento: Todo[]): void {
-    this.todos.set(memento);
-  }
-  
-  get todosPort() {
-    return this.todos;
+  restoreMemento(memento: Todo[]): void {
+    this.todosPort.set(memento);
   }
 }
 
-const originator = new TodoListOriginator();
-const caretaker = new MementoBaseCaretaker(originator);
+// Create a ViewModel wrapper
+class TodoListViewModel extends ViewModel {
+  readonly caretaker: MementoBaseCaretaker<Todo[], TodoListOriginator>;
 
-// Save initial state
-caretaker.saveState();
+  constructor(
+    todosPort: StatePort<Todo[]>,
+    historyPort: StatePort<Todo[][]>,
+    historyPointerPort: StatePort<number>
+  ) {
+    super();
+    const originator = new TodoListOriginator(todosPort);
+    this.caretaker = new MementoBaseCaretaker(
+      this, // Pass this as owner
+      originator,
+      historyPort,
+      historyPointerPort
+    );
+  }
+}
 
-// Make changes
-originator.todosPort.set([...originator.todosPort.get(), { id: 1, text: 'Todo 1' }]);
-caretaker.saveState();
-
-// Undo
-caretaker.undo(); // Restores previous state
-
-// Redo
-caretaker.redo(); // Restores next state
-
-// Check if undo/redo is possible
-const canUndo = caretaker.canUndo.get(); // boolean
-const canRedo = caretaker.canRedo.get(); // boolean
+// Use in component
+function TodoList() {
+  const todosPort = useCreateStatePort<Todo[]>([]);
+  const historyPort = useCreateStatePort<Todo[][]>([]);
+  const historyPointerPort = useCreateStatePort<number>(0);
+  
+  const vm = useViewModel(
+    () => new TodoListViewModel(todosPort, historyPort, historyPointerPort)
+  );
+  const caretaker = vm.caretaker;
+  
+  // Use caretaker methods
+  const canUndo = useReactiveValue(caretaker.canUndo);
+  const canRedo = useReactiveValue(caretaker.canRedo);
+  
+  return (
+    <div>
+      <button onClick={() => caretaker.undo()} disabled={!canUndo}>
+        Undo
+      </button>
+      <button onClick={() => caretaker.redo()} disabled={!canRedo}>
+        Redo
+      </button>
+    </div>
+  );
+}
 ```
+
+### Key Points
+
+- `MementoBaseCaretaker` is a **service**, not a ViewModel
+- It receives a `Disposable` owner via dependency injection
+- Wrap it in a `ViewModel` in your component for automatic lifecycle management
+- Use the owner for `.for(owner)` when creating computed values
 

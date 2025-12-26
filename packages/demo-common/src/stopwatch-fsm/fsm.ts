@@ -1,4 +1,4 @@
-import type { StatePort, ComputedValue } from "@xndrjs/core";
+import type { StatePort, ComputedValue, Disposable } from "@xndrjs/core";
 import { createComputed } from "@xndrjs/core";
 import { FSMContextManager } from "@xndrjs/fsm";
 import type { FSMContextState } from "@xndrjs/fsm";
@@ -87,11 +87,12 @@ export class StopwatchFSM extends FSMContextManager<
   }
 
   constructor(
+    owner: Disposable,
     currentStatePort: StatePort<FSMContextState<StopwatchFSM>>,
     timeIntPort: StatePort<number>,
     eventBus: EventBusInterface,
   ) {
-    super(currentStatePort);
+    super(owner, currentStatePort);
     this._timeIntPort = timeIntPort;
     this._eventBus = eventBus;
 
@@ -105,7 +106,7 @@ export class StopwatchFSM extends FSMContextManager<
         const seconds = Math.floor(totalSeconds % 60);
         return { hours, minutes, seconds };
       })
-      .for(this);
+      .for(owner);
 
     // Set initial state
     currentStatePort.set(new IdleState());
@@ -145,10 +146,5 @@ export class StopwatchFSM extends FSMContextManager<
     await this.dispatch({ intent: "reset" });
     const time = this._timeIntPort.get();
     this._eventBus.publish(new StopwatchStopEvent({ time }));
-  }
-
-  [Symbol.dispose](): void {
-    super._cleanup();
-    this._clearInterval();
   }
 }

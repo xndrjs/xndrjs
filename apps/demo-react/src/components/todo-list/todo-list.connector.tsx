@@ -1,33 +1,33 @@
 import { useCreateStatePort, useViewModel } from "@xndrjs/adapter-react";
-import { TodoListManager, NewTodoItemForm } from "@xndrjs/demo-common";
+import { TodoListService, NewTodoItemForm } from "@xndrjs/demo-common";
 import { TodoListView } from "./todo-list.view";
 import { useReactiveValue } from "@xndrjs/adapter-react";
 import { NewTodoItemFormView } from "./new-todo-item-form.view";
 import { useMonitorStatePort, useMonitorMemento } from "@xndrjs/devtools-react";
 
 interface TodoHistoryConnectorProps {
-  todoListManager: TodoListManager;
+  todoListService: TodoListService;
 }
 
 export function TodoListConnector({
-  todoListManager,
+  todoListService,
 }: TodoHistoryConnectorProps) {
   const newTodoTextPort = useCreateStatePort<string>("");
   const newTodoItemForm = useViewModel(
-    () => new NewTodoItemForm(newTodoTextPort, todoListManager),
+    () => new NewTodoItemForm(newTodoTextPort, todoListService),
   );
 
-  const todos = useReactiveValue(todoListManager.todos);
-  const canUndo = useReactiveValue(todoListManager.canUndo);
-  const canRedo = useReactiveValue(todoListManager.canRedo);
+  const todos = useReactiveValue(todoListService.todos);
+  const canUndo = useReactiveValue(todoListService.canUndo);
+  const canRedo = useReactiveValue(todoListService.canRedo);
   const newTodoText = useReactiveValue(newTodoTextPort);
 
   // Monitor StatePorts automatically (handles both ReactiveValue and ComputedValue)
-  useMonitorStatePort(todoListManager.canUndo, { name: "TodoList.canUndo" });
-  useMonitorStatePort(todoListManager.canRedo, { name: "TodoList.canRedo" });
+  useMonitorStatePort(todoListService.canUndo, { name: "TodoList.canUndo" });
+  useMonitorStatePort(todoListService.canRedo, { name: "TodoList.canRedo" });
 
   // Monitor Memento caretaker for DevTools
-  useMonitorMemento(todoListManager.caretaker, { name: "TodoList.Memento" });
+  useMonitorMemento(todoListService.caretaker, { name: "TodoList.Memento" });
 
   return (
     <div className="demo-section">
@@ -40,14 +40,14 @@ export function TodoListConnector({
       />
       <TodoListView
         todos={todos}
-        onToggle={(id) => todoListManager.toggleTodo(id)}
-        onDelete={(id) => todoListManager.removeTodo(id)}
+        onToggle={(id) => todoListService.toggleTodo(id)}
+        onDelete={(id) => todoListService.removeTodo(id)}
       />
       <div className="todo-actions">
-        <button onClick={() => todoListManager.undo()} disabled={!canUndo}>
+        <button onClick={() => todoListService.undo()} disabled={!canUndo}>
           Undo
         </button>
-        <button onClick={() => todoListManager.redo()} disabled={!canRedo}>
+        <button onClick={() => todoListService.redo()} disabled={!canRedo}>
           Redo
         </button>
       </div>

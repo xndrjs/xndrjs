@@ -105,6 +105,17 @@ export { ViewModel } from './view-model';
 export type { Disposable } from './disposable';
 export { SubscriptionsRegistry } from './subscriptions-registry';
 
+// Resource helpers
+export {
+  createInterval,
+  createTimeout,
+  createEventListener,
+  createAbortController,
+  createWebSocket,
+  createAnimationFrame,
+  createIntersectionObserver,
+} from './resource-helpers';
+
 // Utilities
 export { batched } from './batched';
 export { BatchContext } from './batch-context';

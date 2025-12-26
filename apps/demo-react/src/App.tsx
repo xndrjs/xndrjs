@@ -6,7 +6,7 @@ import {
   useEventLog,
 } from "./components/event-log/event-log.connector";
 import { useCreateStatePort, useViewModel } from "@xndrjs/adapter-react";
-import { Todo, TodoListManager } from "@xndrjs/demo-common";
+import { Todo, TodoListService } from "@xndrjs/demo-common";
 import { eventBus } from "./messaging";
 import { DevToolsPanel } from "@xndrjs/devtools-react";
 
@@ -22,8 +22,8 @@ function App() {
     },
     { id: crypto.randomUUID(), text: "Build demo app", completed: false },
   ]);
-  const todoListManager = useViewModel(
-    () => new TodoListManager(eventBus, { todosPort }),
+  const todoListService = useViewModel(
+    () => new TodoListService(eventBus, { todosPort }),
   );
 
   return (
@@ -34,9 +34,9 @@ function App() {
       </div>
 
       <div className="demo-grid">
-        <TodoListConnector todoListManager={todoListManager} />
+        <TodoListConnector todoListService={todoListService} />
         <StopwatchFSMConnector />
-        <TodoHistoryConnector todoListManager={todoListManager} />
+        <TodoHistoryConnector todoListService={todoListService} />
         <EventLogConnector />
       </div>
 

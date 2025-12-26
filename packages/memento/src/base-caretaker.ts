@@ -1,8 +1,4 @@
-import {
-  createComputed,
-  SubscriptionsRegistry,
-  type Disposable,
-} from "@xndrjs/core";
+import { createComputed, type Disposable } from "@xndrjs/core";
 import type { ComputedValue, StatePort } from "@xndrjs/core";
 import { MementoAbstractCaretaker } from "./abstract-caretaker";
 import type { MementoBaseOriginator } from "./types";
@@ -12,6 +8,9 @@ import isEqual from "fast-deep-equal";
  * Base implementation of a caretaker for the Memento pattern.
  * Uses StatePort for framework-agnostic state management.
  *
+ * This is a manager class and should receive a Disposable owner via dependency injection,
+ * not implement Disposable. The owner is responsible for cleanup of subscriptions.
+ *
  * @template TMemento - The type of the memento.
  * @template Originator - The originator type. Must implement MementoBaseOriginator<TMemento>.
  */
@@ -19,27 +18,27 @@ export class MementoBaseCaretaker<
   TMemento,
   Originator extends MementoBaseOriginator<TMemento> =
     MementoBaseOriginator<TMemento>,
->
-  extends MementoAbstractCaretaker<never, Originator, TMemento>
-  implements Disposable
-{
+> extends MementoAbstractCaretaker<never, Originator, TMemento> {
   private _canUndo: ComputedValue<boolean>;
   private _canRedo: ComputedValue<boolean>;
+  protected readonly owner: Disposable;
 
   constructor(
+    owner: Disposable,
     originator: Originator,
     history: StatePort<TMemento[]>,
     historyPointer: StatePort<number>,
   ) {
     super(originator, history, historyPointer);
+    this.owner = owner;
 
     this._canUndo = createComputed(this._historyPointer)
       .as((pointer) => pointer > 0)
-      .for(this);
+      .for(owner);
 
     this._canRedo = createComputed(this._historyPointer, this._history)
       .as((pointer, history) => pointer < history.length - 1)
-      .for(this);
+      .for(owner);
   }
 
   public saveState() {
@@ -91,13 +90,5 @@ export class MementoBaseCaretaker<
 
   get canRedo(): ComputedValue<boolean> {
     return this._canRedo;
-  }
-
-  /**
-   * Dispose of the caretaker, cleaning up all subscriptions.
-   * Implements Disposable interface for automatic cleanup.
-   */
-  [Symbol.dispose](): void {
-    SubscriptionsRegistry.cleanup(this);
   }
 }

@@ -1,9 +1,10 @@
 <script lang="ts">
   import { ReactiveArray } from "@xndrjs/core";
-  import { TodoListManager } from "@xndrjs/demo-common";
+  import { TodoListService } from "@xndrjs/demo-common";
   import type { Todo } from "@xndrjs/demo-common";
   import { eventBus } from "./messaging";
   import { useEventLog } from "./components/event-log/event-log.connector";
+  import { useViewModel } from "@xndrjs/adapter-svelte";
   import TodoListConnector from "./components/todo-list/todo-list.connector.svelte";
   import TodoHistoryConnector from "./components/todo-list/history.connector.svelte";
   import StopwatchFSMConnector from "./components/stopwatch-fsm/stopwatch-fsm.connector.svelte";
@@ -21,8 +22,8 @@
     },
     { id: crypto.randomUUID(), text: "Build demo app", completed: false },
   ]);
-  // example: creating a global manager and passing it to components as a prop
-  const todoListManager = new TodoListManager(eventBus, { todosPort });
+  // example: creating a global service and passing it to components as a prop
+  const todoListService = useViewModel(() => new TodoListService(eventBus, { todosPort }));
 </script>
 
 <div class="app">
@@ -34,9 +35,9 @@
   </div>
 
   <div class="demo-grid">
-    <TodoListConnector {todoListManager} />
+    <TodoListConnector {todoListService} />
     <StopwatchFSMConnector />
-    <TodoHistoryConnector {todoListManager} />
+    <TodoHistoryConnector {todoListService} />
     <EventLogConnector />
   </div>
 </div>

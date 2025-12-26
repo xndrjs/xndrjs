@@ -1,4 +1,9 @@
-import { ReactiveArray, ReactiveValue, type StatePort, ViewModel } from "@xndrjs/core";
+import {
+  ReactiveArray,
+  ReactiveValue,
+  type StatePort,
+  ViewModel,
+} from "@xndrjs/core";
 import { MementoBaseCaretaker } from "@xndrjs/memento";
 import type { MementoBaseOriginator } from "@xndrjs/memento";
 import type { EventBusInterface } from "@xndrjs/cqrs";
@@ -60,11 +65,11 @@ export class TodoListOriginator implements MementoBaseOriginator<TodoListState> 
 }
 
 /**
- * Manager for TodoList with undo/redo capabilities using Memento pattern.
+ * Service for TodoList with undo/redo capabilities using Memento pattern.
  * Receives StatePort instances from framework (React, Solid, etc.).
  * Publishes events to EventBus when todos are modified.
  */
-export class TodoListManager extends ViewModel {
+export class TodoListService extends ViewModel {
   private _originator: TodoListOriginator;
   private _caretaker: MementoBaseCaretaker<
     TodoListState, // TMemento
@@ -96,7 +101,7 @@ export class TodoListManager extends ViewModel {
     this._caretaker = new MementoBaseCaretaker<
       TodoListState,
       TodoListOriginator
-    >(this._originator, historyPort, historyPointerPort);
+    >(this, this._originator, historyPort, historyPointerPort);
     this._eventBus = eventBus;
   }
 

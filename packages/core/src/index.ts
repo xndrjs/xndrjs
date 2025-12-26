@@ -19,3 +19,4 @@ export * from "./create-computed";
 // Lifecycle management
 export * from "./subscriptions-registry";
 export * from "./view-model";
+export * from "./resource-helpers";

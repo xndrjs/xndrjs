@@ -1,10 +1,6 @@
 import { createEffect, createRoot } from "solid-js";
 import { describe, expect, it, vi } from "vitest";
-import {
-  ReactiveValue,
-  createComputed,
-  ViewModel,
-} from "@xndrjs/core";
+import { ReactiveValue, createComputed, ViewModel } from "@xndrjs/core";
 import { useReactiveValue } from "./useReactiveValue";
 
 class TestViewModel extends ViewModel {}

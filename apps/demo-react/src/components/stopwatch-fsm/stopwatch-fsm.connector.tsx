@@ -2,12 +2,26 @@ import {
   useCreateStatePort,
   useReactiveValue,
   useViewModel,
-  useFSM,
 } from "@xndrjs/adapter-react";
+import { ViewModel, type StatePort } from "@xndrjs/core";
 import { StopwatchFSM } from "@xndrjs/demo-common";
+import type { FSMContextState } from "@xndrjs/fsm";
 import { StopwatchFSMView } from "./stopwatch-fsm.view";
 import { eventBus } from "../../messaging";
 import { useMonitorFSM } from "@xndrjs/devtools-react";
+
+class StopwatchFSMViewModel extends ViewModel {
+  readonly fsm: StopwatchFSM;
+
+  constructor(
+    currentStatePort: StatePort<FSMContextState<StopwatchFSM>>,
+    timeIntPort: StatePort<number>,
+  ) {
+    super();
+    this.fsm = new StopwatchFSM(this, currentStatePort, timeIntPort, eventBus);
+    this.fsm.initialize();
+  }
+}
 
 export function StopwatchFSMConnector() {
   // Create StatePorts with initial values from FSM defaults
@@ -18,18 +32,15 @@ export function StopwatchFSMConnector() {
     StopwatchFSM.defaults.timeIntPort,
   );
 
-  // Create StopwatchFSM once - ports are stable so manager doesn't need to be recreated
-  const stopwatchFSM = useViewModel(
+  // Create ViewModel that wraps the FSM manager
+  const vm = useViewModel(
     () =>
-      new StopwatchFSM(
+      new StopwatchFSMViewModel(
         stopwatchCurrentStatePort,
         stopwatchTimeIntPort,
-        eventBus,
       ),
   );
-
-  // Register FSM subscriptions
-  useFSM(stopwatchFSM);
+  const stopwatchFSM = vm.fsm;
 
   // Derive reactive values
   const currentState = useReactiveValue(stopwatchFSM.currentState);

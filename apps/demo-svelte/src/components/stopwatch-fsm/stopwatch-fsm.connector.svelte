@@ -1,9 +1,23 @@
 <script lang="ts">
-  import { ReactiveObject, ReactiveValue } from "@xndrjs/core";
+  import { ReactiveObject, ReactiveValue, ViewModel, type StatePort } from "@xndrjs/core";
   import { StopwatchFSM } from "@xndrjs/demo-common";
-  import { reactiveValue } from "@xndrjs/adapter-svelte";
+  import type { FSMContextState } from "@xndrjs/fsm";
+  import { reactiveValue, useViewModel } from "@xndrjs/adapter-svelte";
   import { eventBus } from "../../messaging";
   import StopwatchFSMView from "./stopwatch-fsm.view.svelte";
+
+  class StopwatchFSMViewModel extends ViewModel {
+    readonly fsm: StopwatchFSM;
+
+    constructor(
+      currentStatePort: StatePort<FSMContextState<StopwatchFSM>>,
+      timeIntPort: StatePort<number>,
+    ) {
+      super();
+      this.fsm = new StopwatchFSM(this, currentStatePort, timeIntPort, eventBus);
+      this.fsm.initialize();
+    }
+  }
 
   const stopwatchCurrentStatePort = new ReactiveObject(
     StopwatchFSM.defaults.initialState,
@@ -12,13 +26,10 @@
     StopwatchFSM.defaults.timeIntPort,
   );
 
-  const stopwatchFSM = new StopwatchFSM(
-    stopwatchCurrentStatePort,
-    stopwatchTimeIntPort,
-    eventBus,
+  const vm = useViewModel(
+    () => new StopwatchFSMViewModel(stopwatchCurrentStatePort, stopwatchTimeIntPort),
   );
-
-  stopwatchFSM.initialize();
+  const stopwatchFSM = vm.fsm;
 
   const currentStateStore = reactiveValue(() => stopwatchFSM.currentState);
   const timeStore = reactiveValue(() => stopwatchFSM.timePort);

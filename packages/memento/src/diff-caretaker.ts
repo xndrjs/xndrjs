@@ -1,8 +1,4 @@
-import {
-  createComputed,
-  SubscriptionsRegistry,
-  type Disposable,
-} from "@xndrjs/core";
+import { createComputed, type Disposable } from "@xndrjs/core";
 import type { ComputedValue, StatePort } from "@xndrjs/core";
 import { MementoAbstractCaretaker } from "./abstract-caretaker";
 import type { MementoDiffOriginator } from "./types";
@@ -11,35 +7,38 @@ import { RestoreMementoAction } from "./types";
 /**
  * Caretaker implementation for diff-based mementos using StatePort.
  * Manages history of diffs and provides undo/redo functionality.
+ *
+ * This is a manager class and should receive a Disposable owner via dependency injection,
+ * not implement Disposable. The owner is responsible for cleanup of subscriptions.
  */
 export class MementoDiffCaretaker<
   TState,
   Originator extends MementoDiffOriginator<TState, TMemento>,
   TMemento,
->
-  extends MementoAbstractCaretaker<never, Originator, TMemento>
-  implements Disposable
-{
+> extends MementoAbstractCaretaker<never, Originator, TMemento> {
   protected _lastSavedState!: TState | null;
   private _canUndo: ComputedValue<boolean>;
   private _canRedo: ComputedValue<boolean>;
+  protected readonly owner: Disposable;
 
   constructor(
+    owner: Disposable,
     originator: Originator,
     history: StatePort<TMemento[]>,
     historyPointer: StatePort<number>,
   ) {
     super(originator, history, historyPointer);
+    this.owner = owner;
     // After base constructor's initial save, align lastSavedState with current state.
     this._lastSavedState = this._originator.getState();
 
     this._canUndo = createComputed(this._historyPointer, this._history)
       .as((pointer) => pointer >= 0)
-      .for(this);
+      .for(owner);
 
     this._canRedo = createComputed(this._historyPointer, this._history)
       .as((pointer, history) => pointer < history.length - 1)
-      .for(this);
+      .for(owner);
   }
 
   get canUndo(): ComputedValue<boolean> {
@@ -91,13 +90,5 @@ export class MementoDiffCaretaker<
       this._historyPointer.set(newPointer);
       this._lastSavedState = this._originator.getState();
     }
-  }
-
-  /**
-   * Dispose of the caretaker, cleaning up all subscriptions.
-   * Implements Disposable interface for automatic cleanup.
-   */
-  [Symbol.dispose](): void {
-    SubscriptionsRegistry.cleanup(this);
   }
 }

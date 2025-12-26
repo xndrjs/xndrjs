@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { TodoListManager } from "@xndrjs/demo-common";
+  import { TodoListService } from "@xndrjs/demo-common";
   import { reactiveValue } from "@xndrjs/adapter-svelte";
   import TodoHistoryView from "./todo-history.view.svelte";
 
   interface Props {
-    todoListManager: TodoListManager;
+    todoListService: TodoListService;
   }
 
-  let { todoListManager }: Props = $props();
+  let { todoListService }: Props = $props();
 
-  const historyStore = reactiveValue(() => todoListManager.history);
-  const historyPointerStore = reactiveValue(() => todoListManager.historyPointer);
+  const historyStore = reactiveValue(() => todoListService.history);
+  const historyPointerStore = reactiveValue(() => todoListService.historyPointer);
 </script>
 
 <div class="demo-section">
