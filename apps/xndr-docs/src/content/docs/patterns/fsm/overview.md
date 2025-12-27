@@ -1,5 +1,7 @@
 ---
 title: patterns → fsm → Overview
+seeAlso: |
+  - Learn about [Usage](./usage.md)
 ---
 
 # FSM Pattern (@xndrjs/fsm)
@@ -21,8 +23,4 @@ The `@xndrjs/fsm` package provides `FSMContextManager` for building finite state
 - **States** - Define possible states with configuration
 - **Transitions** - Define valid state transitions
 - **Context** - Reactive state management using StatePort
-
-## Next Steps
-
-- Learn about [Usage](./usage.md)
 

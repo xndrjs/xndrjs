@@ -1,5 +1,10 @@
 ---
 title: core → State Port
+seeAlso: |
+  - Review [Fundamental Concepts](/docs/getting-started/concepts)
+  - Learn about [ReactiveValue](./reactive-value.md) - the simplest StatePort implementation
+  - Explore [ComputedValue](./computed-value.md) - derived reactive values
+  - Check out [Framework Adapters](../adapters/react/overview.md) - connecting StatePort to frameworks
 ---
 
 # StatePort Pattern
@@ -133,10 +138,4 @@ type Count = StatePortValue<typeof countPort>; // number
 // Check if a type is a StatePort
 type IsPort = IsStatePort<ReactiveValue<number>>; // true
 ```
-
-## Next Steps
-
-- Learn about [ReactiveValue](./reactive-value.md) - the simplest StatePort implementation
-- Explore [ComputedValue](./computed-value.md) - derived reactive values
-- Check out [Framework Adapters](../adapters/react/overview.md) - connecting StatePort to frameworks
 

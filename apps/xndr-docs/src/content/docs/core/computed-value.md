@@ -1,5 +1,9 @@
 ---
 title: core → Computed Value
+seeAlso: |
+  - Learn about [Lifecycle Management](./lifecycle.md) - cleanup and disposal
+  - Explore [ReactiveValue](./reactive-value.md) - the simplest reactive primitive
+  - Check out [Framework Adapters](../adapters/react/overview.md) for UI integration
 ---
 
 # ComputedValue
@@ -357,10 +361,4 @@ function SumDisplay() {
 
 <div>Sum: {$sumStore}</div>
 ```
-
-## Next Steps
-
-- Learn about [Lifecycle Management](./lifecycle.md) - cleanup and disposal
-- Explore [ReactiveValue](./reactive-value.md) - the simplest reactive primitive
-- Check out [Framework Adapters](../adapters/react/overview.md) for UI integration
 

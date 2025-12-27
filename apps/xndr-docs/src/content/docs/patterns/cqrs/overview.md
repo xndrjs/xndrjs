@@ -1,5 +1,9 @@
 ---
 title: patterns → cqrs → Overview
+seeAlso: |
+  - Learn about [CommandBus](./command-bus.md)
+  - Explore [QueryBus](./query-bus.md)
+  - Check out [EventBus](./event-bus.md)
 ---
 
 # CQRS Pattern (@xndrjs/cqrs)
@@ -57,10 +61,4 @@ class TodoCreatedEvent extends DomainEvent<"TodoCreated", { id: string; text: st
   }
 }
 ```
-
-## Next Steps
-
-- Learn about [CommandBus](./command-bus.md)
-- Explore [QueryBus](./query-bus.md)  
-- Check out [EventBus](./event-bus.md)
 

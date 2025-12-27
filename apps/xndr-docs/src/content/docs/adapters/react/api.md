@@ -1,5 +1,9 @@
 ---
 title: adapters → react → Api
+seeAlso: |
+  - Learn about [Core concepts](../../core/overview.md)
+  - Explore [FSM pattern](../../patterns/fsm/overview.md)
+  - Check out [Getting Started](../../getting-started/concepts.md)
 ---
 
 # API Reference
@@ -179,10 +183,4 @@ All React adapter types are exported for TypeScript usage:
 // All hooks are exported with their types
 export { useReactiveValue, useStatePort, useCreateStatePort, useViewModel };
 ```
-
-## Next Steps
-
-- Learn about [Core concepts](../../core/overview.md)
-- Explore [FSM pattern](../../patterns/fsm/overview.md)
-- Check out [Getting Started](../../getting-started/concepts.md)
 

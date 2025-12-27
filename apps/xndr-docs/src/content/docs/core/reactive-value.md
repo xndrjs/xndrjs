@@ -1,5 +1,9 @@
 ---
 title: core → Reactive Value
+seeAlso: |
+  - Learn about [ComputedValue](./computed-value.md) - derived reactive values
+  - Explore [StatePort](./state-port.md) - the foundation interface
+  - Check out [Framework Adapters](../adapters/react/overview.md) for UI integration
 ---
 
 # ReactiveValue
@@ -268,10 +272,4 @@ function Counter() {
 
 <div>{$countStore}</div>
 ```
-
-## Next Steps
-
-- Learn about [ComputedValue](./computed-value.md) - derived reactive values
-- Explore [StatePort](./state-port.md) - the foundation interface
-- Check out [Framework Adapters](../adapters/react/overview.md) for UI integration
 

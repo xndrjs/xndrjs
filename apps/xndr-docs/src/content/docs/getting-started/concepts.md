@@ -1,5 +1,11 @@
 ---
 title: getting-started → Concepts
+seeAlso: |
+  - Learn about [ReactiveValue](/docs/core/reactive-value) in detail
+  - Explore [Computed Values](/docs/core/computed-value)
+  - Check out [Framework Adapters](/docs/adapters/react/overview)
+  - See [StatePort Pattern](/docs/core/state-port)
+  - Learn about [Lifecycle Management](/docs/core/lifecycle)
 ---
 
 # Fundamental Concepts
@@ -393,10 +399,4 @@ function Counter() {
 - **Memento**: Undo/Redo functionality
 
 See the [Patterns documentation](../patterns/cqrs/overview.md) for more details.
-
-## Next Steps
-
-- Learn about [ReactiveValue](../core/reactive-value.md) in detail
-- Explore [Computed Values](../core/computed-value.md)
-- Check out [Framework Adapters](../adapters/react/overview.md)
 

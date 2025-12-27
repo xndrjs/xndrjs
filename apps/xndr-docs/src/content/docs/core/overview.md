@@ -2,6 +2,11 @@
 title: Core Package Overview
 description: Overview of the @xndrjs/core package
 order: 1
+seeAlso: |
+  - Learn about [StatePort](./state-port.md)
+  - Explore [ReactiveValue](./reactive-value.md)
+  - Understand [ComputedValue](./computed-value.md)
+  - Read about [Lifecycle Management](./lifecycle.md)
 ---
 
 # Core Package Overview
@@ -120,11 +125,3 @@ export {
 export { batched } from './batched';
 export { BatchContext } from './batch-context';
 ```
-
-## Next Steps
-
-- Learn about [StatePort](./state-port.md)
-- Explore [ReactiveValue](./reactive-value.md)
-- Understand [ComputedValue](./computed-value.md)
-- Read about [Lifecycle Management](./lifecycle.md)
-

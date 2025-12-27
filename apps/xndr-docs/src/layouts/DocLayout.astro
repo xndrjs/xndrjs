@@ -98,13 +98,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   }
 
   .doc-article :global(a) {
-    color: inherit;
-    transition: color 0.2s ease;
+    color: var(--xndr-primary-text);
+    transition: color 0.2s ease, opacity 0.2s ease;
     text-decoration: none;
   }
 
   .doc-article :global(a:hover) {
     color: var(--xndr-primary-text);
+    opacity: 0.8;
     text-decoration: underline;
   }
 

@@ -1,5 +1,7 @@
 ---
 title: patterns → memento → Overview
+seeAlso: |
+  - Learn about [Usage](./usage.md)
 ---
 
 # Memento Pattern (@xndrjs/memento)
@@ -24,8 +26,4 @@ The `@xndrjs/memento` package provides:
 - **Originator** - Object whose state needs to be saved
 - **Memento** - Snapshot of the originator's state
 - **Caretaker** - Manages the history of mementos
-
-## Next Steps
-
-- Learn about [Usage](./usage.md)
 

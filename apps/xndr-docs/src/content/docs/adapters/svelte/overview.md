@@ -1,5 +1,8 @@
 ---
 title: adapters → svelte → Overview
+seeAlso: |
+  - Learn about the [API Reference](./api.md)
+  - Check out [Core documentation](../../core/overview.md)
 ---
 
 # Setup
@@ -53,9 +56,4 @@ The Svelte adapter provides two main functions:
 <div>{$doubledStore}</div>
 <input bind:value={text} />
 ```
-
-## Next Steps
-
-- Learn about the [API Reference](./api.md)
-- Check out [Core documentation](../../core/overview.md)
 

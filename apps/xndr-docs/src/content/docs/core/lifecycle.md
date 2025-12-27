@@ -1,5 +1,9 @@
 ---
 title: core → Lifecycle
+seeAlso: |
+  - Learn about [ReactiveValue](./reactive-value.md) and [ComputedValue](./computed-value.md)
+  - Explore [Framework Adapters](../adapters/react/overview.md) for framework integration
+  - Check out [Pattern Packages](../patterns/cqrs/overview.md) for complex state management
 ---
 
 # Lifecycle Management
@@ -377,10 +381,4 @@ function TodoApp() {
   // ... component code
 }
 ```
-
-## Next Steps
-
-- Learn about [ReactiveValue](./reactive-value.md) and [ComputedValue](./computed-value.md)
-- Explore [Framework Adapters](../adapters/react/overview.md) for framework integration
-- Check out [Pattern Packages](../patterns/cqrs/overview.md) for complex state management
 

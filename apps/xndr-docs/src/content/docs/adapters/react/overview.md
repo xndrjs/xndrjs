@@ -1,5 +1,9 @@
 ---
 title: adapters → react → Overview
+seeAlso: |
+  - Learn about the [API Reference](./api.md)
+  - Check out examples in the [Core documentation](../../core/overview.md)
+  - Explore [Pattern packages](../../patterns/cqrs/overview.md)
 ---
 
 # Setup
@@ -70,10 +74,4 @@ function TodoList() {
   );
 }
 ```
-
-## Next Steps
-
-- Learn about the [API Reference](./api.md)
-- Check out examples in the [Core documentation](../../core/overview.md)
-- Explore [Pattern packages](../../patterns/cqrs/overview.md)
 

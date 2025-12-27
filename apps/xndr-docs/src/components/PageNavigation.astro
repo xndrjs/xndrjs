@@ -37,7 +37,13 @@ const cleanTitle = (title: string, slug: string): string => {
 
 {(previous || next) && (
   <nav 
-    class={`page-navigation ${previous && next ? 'page-navigation--both' : 'page-navigation--single'}`}
+    class={`page-navigation ${
+      previous && next 
+        ? 'page-navigation--both' 
+        : next 
+          ? 'page-navigation--single page-navigation--next-only' 
+          : 'page-navigation--single page-navigation--previous-only'
+    }`}
     aria-label="Page navigation"
   >
     {previous && (
@@ -72,6 +78,10 @@ const cleanTitle = (title: string, slug: string): string => {
   .page-navigation--single .page-navigation__link {
     flex: 0 0 50%;
     max-width: 50%;
+  }
+
+  .page-navigation--next-only {
+    justify-content: flex-end;
   }
 
   .page-navigation__link {

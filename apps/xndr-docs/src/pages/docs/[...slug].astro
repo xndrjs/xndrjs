@@ -75,8 +75,8 @@ const { previous, next } = await getNavigationPages(currentSlug);
 <DocLayout title={doc.data.title} description={doc.data.description || `Documentation for ${doc.data.title}`}>
   <Breadcrumbs items={breadcrumbItems} />
   <DocContent />
-  {doc.data.seeAlso && doc.data.seeAlso.length > 0 && (
-    <SeeAlso links={doc.data.seeAlso} />
+  {doc.data.seeAlso && (
+    <SeeAlso content={doc.data.seeAlso} />
   )}
   <PageNavigation previous={previous} next={next} />
 </DocLayout>

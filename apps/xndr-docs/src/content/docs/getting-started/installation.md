@@ -1,5 +1,7 @@
 ---
 title: getting-started → Installation
+seeAlso: |
+  After installation, check out the [Core Concepts](./concepts.md) guide to understand how to use `xndr` in your application.
 ---
 
 # Installation
@@ -74,8 +76,3 @@ All `xndr` packages are written in TypeScript and include type definitions. No a
 - **@xndrjs/adapter-react**: Requires `react` >= 18.0.0
 - **@xndrjs/adapter-solid**: Requires `solid-js` >= 1.8.0
 - **@xndrjs/adapter-svelte**: Requires `svelte` >= 5.0.0
-
-## Next Steps
-
-After installation, check out the [Core Concepts](./concepts.md) guide to understand how to use `xndr` in your application.
-

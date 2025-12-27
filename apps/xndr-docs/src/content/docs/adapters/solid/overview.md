@@ -1,5 +1,8 @@
 ---
 title: adapters → solid → Overview
+seeAlso: |
+  - Learn about the [API Reference](./api.md)
+  - Check out [Core documentation](../../core/overview.md)
 ---
 
 # Setup
@@ -53,9 +56,4 @@ function Counter() {
   );
 }
 ```
-
-## Next Steps
-
-- Learn about the [API Reference](./api.md)
-- Check out [Core documentation](../../core/overview.md)
 
