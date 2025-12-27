@@ -1,7 +1,10 @@
 ---
 import DocLayout from '../../layouts/DocLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageNavigation from '../../components/PageNavigation.astro';
+import SeeAlso from '../../components/SeeAlso.astro';
 import { getCollection } from 'astro:content';
+import { getNavigationPages } from '../../utils/navigation';
 
 export async function getStaticPaths() {
   const docs = await getCollection('docs');
@@ -63,10 +66,18 @@ for (let i = 0; i < pathParts.length - 1; i++) {
 
 // Add the current page as the last breadcrumb (always active, no link)
 breadcrumbItems.push({ label: cleanTitle(doc.data.title), href: Astro.url.pathname });
+
+// Get navigation pages (previous/next)
+const currentSlug = doc.id.replace(/\.md$/, '');
+const { previous, next } = await getNavigationPages(currentSlug);
 ---
 
 <DocLayout title={doc.data.title} description={doc.data.description || `Documentation for ${doc.data.title}`}>
   <Breadcrumbs items={breadcrumbItems} />
   <DocContent />
+  {doc.data.seeAlso && doc.data.seeAlso.length > 0 && (
+    <SeeAlso links={doc.data.seeAlso} />
+  )}
+  <PageNavigation previous={previous} next={next} />
 </DocLayout>
 

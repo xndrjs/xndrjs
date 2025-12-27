@@ -1,0 +1,86 @@
+---
+interface SeeAlsoLink {
+  title: string;
+  href: string;
+}
+
+interface Props {
+  links: SeeAlsoLink[];
+}
+
+const { links } = Astro.props;
+---
+
+{links && links.length > 0 && (
+  <section class="see-also">
+    <h2 class="see-also__title">See Also</h2>
+    <ul class="see-also__list">
+      {links.map((link) => (
+        <li class="see-also__item">
+          <a href={link.href} class="see-also__link">{link.title}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  .see-also {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .see-also__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--xndr-text-primary);
+    margin-bottom: 1rem;
+    font-family: 'Lexend Exa', sans-serif;
+  }
+
+  .see-also__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .see-also__item {
+    margin: 0;
+  }
+
+  .see-also__link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background: rgba(40, 40, 40, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+  }
+
+  .see-also__link:hover {
+    background: rgba(50, 50, 50, 0.6);
+    border-color: var(--xndr-primary-text);
+    color: var(--xndr-primary-text);
+    transform: translateX(4px);
+  }
+
+  .see-also__link::before {
+    content: '→';
+    margin-right: 0.5rem;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+
+  .see-also__link:hover::before {
+    opacity: 1;
+  }
+</style>
+
