@@ -1,6 +1,25 @@
 {
   "name": "@xndrjs/cqrs",
   "version": "0.1.0",
+  "description": "Command Query Responsibility Segregation (CQRS) pattern implementation with CommandBus, QueryBus, and EventBus.",
+  "keywords": [
+    "cqrs",
+    "command-bus",
+    "query-bus",
+    "event-bus",
+    "state-management",
+    "framework-agnostic",
+    "typescript",
+    "event-driven"
+  ],
+  "author": "Fabio Fognani",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xndrjs/xndrjs.git",
+    "directory": "packages/cqrs"
+  },
+  "homepage": "https://xndrjs.dev/",
   "private": false,
   "type": "module",
   "main": "dist/index.js",
@@ -37,5 +56,8 @@
     "typescript": "~5.9.3",
     "vitest": "3.2.4"
   },
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "publishConfig": {
+    "access": "public"
+  }
 }

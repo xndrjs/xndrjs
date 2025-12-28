@@ -1,6 +1,23 @@
 {
   "name": "@xndrjs/fsm",
   "version": "0.1.0",
+  "description": "Finite State Machine implementation with framework-agnostic state management integration.",
+  "keywords": [
+    "fsm",
+    "finite-state-machine",
+    "state-machine",
+    "state-management",
+    "framework-agnostic",
+    "typescript"
+  ],
+  "author": "Fabio Fognani",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xndrjs/xndrjs.git",
+    "directory": "packages/fsm"
+  },
+  "homepage": "https://xndrjs.dev/",
   "private": false,
   "type": "module",
   "main": "dist/index.js",
@@ -36,5 +53,8 @@
     "tsup": "^8.5.0",
     "typescript": "~5.9.3",
     "vitest": "^3.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

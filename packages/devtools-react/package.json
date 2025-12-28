@@ -1,6 +1,24 @@
 {
   "name": "@xndrjs/devtools-react",
   "version": "0.1.0",
+  "description": "React DevTools for debugging and monitoring xndr reactive applications. Visualize state changes, FSM transitions, and event flows.",
+  "keywords": [
+    "react",
+    "devtools",
+    "debugging",
+    "state-management",
+    "fsm",
+    "monitoring",
+    "typescript"
+  ],
+  "author": "Fabio Fognani",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xndrjs/xndrjs.git",
+    "directory": "packages/devtools-react"
+  },
+  "homepage": "https://xndrjs.dev/",
   "private": false,
   "type": "module",
   "main": "dist/index.cjs",
@@ -52,5 +70,8 @@
   "peerDependencies": {
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

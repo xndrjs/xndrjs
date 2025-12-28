@@ -1,6 +1,25 @@
 {
   "name": "@xndrjs/core",
   "version": "0.1.0",
+  "description": "Framework-agnostic state management core library. StatePort pattern, reactive values, and lifecycle management.",
+  "keywords": [
+    "state-management",
+    "reactive",
+    "framework-agnostic",
+    "typescript",
+    "stateport",
+    "reactive-value",
+    "computed-value",
+    "viewmodel"
+  ],
+  "author": "Fabio Fognani",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xndrjs/xndrjs.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://xndrjs.dev/",
   "private": false,
   "type": "module",
   "main": "dist/index.js",
@@ -25,15 +44,14 @@
     "test:watch": "vitest --passWithNoTests",
     "prepublish": "pnpm format && pnpm lint && pnpm test && pnpm build && pnpm pack"
   },
-  "dependencies": {
-    "fast-deep-equal": "^3.1.3",
-    "immer": "^10.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@xndrjs/config-eslint": "workspace:*",
     "@xndrjs/config-typescript": "workspace:*",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^24.7.2",
+    "fast-deep-equal": "^3.1.3",
+    "immer": "^10.0.0",
     "jsdom": "^27.0.0",
     "tsup": "^8.5.0",
     "typescript": "~5.9.3",
@@ -42,5 +60,8 @@
   "peerDependencies": {
     "fast-deep-equal": "^3.1.3",
     "immer": "^10.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

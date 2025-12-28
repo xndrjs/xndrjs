@@ -1,6 +1,24 @@
 {
   "name": "@xndrjs/memento",
   "version": "0.1.0",
+  "description": "Memento pattern implementation for undo/redo functionality with framework-agnostic state management.",
+  "keywords": [
+    "memento",
+    "undo",
+    "redo",
+    "state-management",
+    "framework-agnostic",
+    "typescript",
+    "history"
+  ],
+  "author": "Fabio Fognani",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xndrjs/xndrjs.git",
+    "directory": "packages/memento"
+  },
+  "homepage": "https://xndrjs.dev/",
   "private": false,
   "type": "module",
   "main": "dist/index.js",
@@ -37,5 +55,8 @@
     "tsup": "^8.5.0",
     "typescript": "~5.9.3",
     "vitest": "^3.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

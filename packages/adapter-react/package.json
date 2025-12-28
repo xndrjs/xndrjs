@@ -1,6 +1,24 @@
 {
   "name": "@xndrjs/adapter-react",
   "version": "0.1.0",
+  "description": "React adapter for xndr framework-agnostic state management. Hooks for integrating StatePort with React components.",
+  "keywords": [
+    "react",
+    "adapter",
+    "state-management",
+    "hooks",
+    "framework-agnostic",
+    "typescript",
+    "react-hooks"
+  ],
+  "author": "Fabio Fognani",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xndrjs/xndrjs.git",
+    "directory": "packages/adapter-react"
+  },
+  "homepage": "https://xndrjs.dev/",
   "private": false,
   "type": "module",
   "main": "dist/index.js",
@@ -51,5 +69,8 @@
   "peerDependencies": {
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
