@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import MobileMenuWrapper from '../components/MobileMenuWrapper';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import { getSidebarData } from '../utils/sidebar';
 
 interface Props {
@@ -44,6 +45,9 @@ const sidebarData = await getSidebarData();
     <meta property="twitter:url" content="https://xndrjs.dev/" />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
+    
+    <!-- Google Analytics -->
+    <GoogleAnalytics />
   </head>
   <body>
     <nav class="navbar">

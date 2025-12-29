@@ -237,7 +237,7 @@ importers:
         version: 19.0.0
       '@vitejs/plugin-react':
         specifier: ^5.0.4
-        version: 5.1.2(vite@7.2.7(@types/node@20.19.26)(jiti@1.21.7)(terser@5.44.1)(tsx@4.21.0))
+        version: 5.1.2(vite@6.4.1(@types/node@20.19.26)(jiti@1.21.7)(terser@5.44.1)(tsx@4.21.0))
       '@xndrjs/config-eslint':
         specifier: workspace:*
         version: link:../config-eslint
@@ -384,13 +384,6 @@ importers:
         version: 3.7.4
 
   packages/core:
-    dependencies:
-      fast-deep-equal:
-        specifier: ^3.1.3
-        version: 3.1.3
-      immer:
-        specifier: ^10.0.0
-        version: 10.2.0
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.9.1
@@ -404,6 +397,12 @@ importers:
       '@xndrjs/config-typescript':
         specifier: workspace:*
         version: link:../config-typescript
+      fast-deep-equal:
+        specifier: ^3.1.3
+        version: 3.1.3
+      immer:
+        specifier: ^10.0.0
+        version: 10.2.0
       jsdom:
         specifier: ^27.0.0
         version: 27.0.0(postcss@8.5.6)
@@ -5760,6 +5759,18 @@ snapshots:
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
       vite: 6.4.1(@types/node@24.10.2)(jiti@1.21.7)(terser@5.44.1)(tsx@4.21.0)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vitejs/plugin-react@5.1.2(vite@6.4.1(@types/node@20.19.26)(jiti@1.21.7)(terser@5.44.1)(tsx@4.21.0))':
+    dependencies:
+      '@babel/core': 7.28.5
+      '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.5)
+      '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.28.5)
+      '@rolldown/pluginutils': 1.0.0-beta.53
+      '@types/babel__core': 7.20.5
+      react-refresh: 0.18.0
+      vite: 6.4.1(@types/node@20.19.26)(jiti@1.21.7)(terser@5.44.1)(tsx@4.21.0)
     transitivePeerDependencies:
       - supports-color
 
