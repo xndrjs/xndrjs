@@ -1,6 +1,6 @@
 {
   "name": "@xndrjs/cqrs",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.0",
   "description": "Command Query Responsibility Segregation (CQRS) pattern implementation with CommandBus, QueryBus, and EventBus.",
   "keywords": [
     "cqrs",

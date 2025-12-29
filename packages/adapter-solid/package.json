@@ -1,6 +1,6 @@
 {
   "name": "@xndrjs/adapter-solid",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.0",
   "description": "Solid.js adapter for xndr framework-agnostic state management. Functions for integrating StatePort with Solid signals.",
   "keywords": [
     "solid",

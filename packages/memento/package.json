@@ -1,6 +1,6 @@
 {
   "name": "@xndrjs/memento",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.0",
   "description": "Memento pattern implementation for undo/redo functionality with framework-agnostic state management.",
   "keywords": [
     "memento",
