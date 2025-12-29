@@ -1,6 +1,6 @@
 {
   "name": "@xndrjs/adapter-svelte",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.0",
   "description": "Svelte adapter for xndr framework-agnostic state management. Functions for integrating StatePort with Svelte stores and runes.",
   "keywords": [
     "svelte",
